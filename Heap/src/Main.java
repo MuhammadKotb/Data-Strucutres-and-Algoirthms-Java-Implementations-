@@ -21,11 +21,14 @@ public class Main {
         heap.insert(23);
         heap.insert(6);
         heap.deleteMin();
+<<<<<<< HEAD
         heap.deleteMin();
         heap.deleteMin();
         heap.deleteMin();
         heap.deleteMin();
         heap.deleteMin();
+=======
+>>>>>>> 50ec87ac30d339ed1bb7a792c45db5ac5d047ea9
 
         heap.print();
 
