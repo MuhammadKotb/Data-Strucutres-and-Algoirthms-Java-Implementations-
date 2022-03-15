@@ -57,11 +57,15 @@ public class Heap<T extends Comparable<T>>{
     }
 
     public void deleteMin(){
-        Node lastNode = heap.get(heap.size() - 1);
-        heap.remove(heap.size() - 1);
-        lastNode.setInedx(0);
-        heap.set(0, lastNode);
-        bubbleDown(lastNode);
+        if(heap.size() == 1)
+            heap.remove(heap.size() - 1);
+        else{
+            Node lastNode = heap.get(heap.size() - 1);
+            heap.remove(heap.size() - 1);
+            lastNode.setInedx(0);
+            heap.set(0, lastNode);
+            bubbleDown(lastNode);
+        }
     }
 
     private void bubbleUp(Node node){

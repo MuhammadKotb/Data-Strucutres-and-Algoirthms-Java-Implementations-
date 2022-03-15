@@ -21,6 +21,11 @@ public class Main {
         heap.insert(23);
         heap.insert(6);
         heap.deleteMin();
+        heap.deleteMin();
+        heap.deleteMin();
+        heap.deleteMin();
+        heap.deleteMin();
+        heap.deleteMin();
 
         heap.print();
 
