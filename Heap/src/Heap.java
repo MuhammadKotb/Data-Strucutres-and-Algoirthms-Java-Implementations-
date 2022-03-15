@@ -71,7 +71,7 @@ public class Heap<T extends Comparable<T>>{
     private void bubbleUp(Node node){
         Node parent = node.getParent();
         if(parent != null){
-            if(node.data.compareTo(parent.data) < 0){
+            if(node.data.compareTo(parent.data) > 0){
                 heap.set(node.getIndex(), parent);
                 heap.set(parent.getIndex(), node);
                 int tempIndex = parent.getIndex();
@@ -85,8 +85,8 @@ public class Heap<T extends Comparable<T>>{
         Node left = node.getLeft();
         Node right = node.getRight();
         if(left != null && right != null){
-            if(left.data.compareTo(right.data) < 0){
-                if(node.data.compareTo(left.data) > 0) {
+            if(left.data.compareTo(right.data) > 0){
+                if(node.data.compareTo(left.data) < 0) {
                     heap.set(node.getIndex(), left);
                     heap.set(left.getIndex(), node);
                     int tempIndex = left.getIndex();
@@ -96,7 +96,7 @@ public class Heap<T extends Comparable<T>>{
                 }
             }
             else{
-                if(node.data.compareTo(right.data) > 0){
+                if(node.data.compareTo(right.data) < 0){
                     heap.set(node.getIndex(), right);
                     heap.set(right.getIndex(), node);
                     int tempIndex = right.getIndex();
@@ -107,7 +107,7 @@ public class Heap<T extends Comparable<T>>{
             }
         }
         else if(left == null && right != null){
-            if(node.data.compareTo(right.data) > 0){
+            if(node.data.compareTo(right.data) < 0){
                 heap.set(node.getIndex(), right);
                 heap.set(right.getIndex(), node);
                 int tempIndex = right.getIndex();
@@ -117,7 +117,7 @@ public class Heap<T extends Comparable<T>>{
             }
         }
         else if(right == null && left != null){
-            if(node.data.compareTo(left.data) > 0) {
+            if(node.data.compareTo(left.data) < 0) {
                 heap.set(node.getIndex(), left);
                 heap.set(left.getIndex(), node);
                 int tempIndex = left.getIndex();
@@ -126,10 +126,18 @@ public class Heap<T extends Comparable<T>>{
                 bubbleDown(node);
             }
         }
+    }
 
+    public Heap buildHeap(ArrayList<T> arrayList){
+        this.heap = new ArrayList<Node>();
+        for(int i = 0; i < arrayList.size(); i++){
+            heap.add(new Node(arrayList.get(i), i));
+        }
 
-
-
+        for(int i = arrayList.size() / 2 - 1; i >= 0; i--){
+            bubbleDown(heap.get(i));
+        }
+        return this;
     }
 
     public void print(){
