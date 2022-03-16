@@ -33,7 +33,6 @@ public class heapTester{
         catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     @Test
@@ -42,16 +41,22 @@ public class heapTester{
         PriorityQueue<Integer> javaHeap = new PriorityQueue<>((x, y) -> Integer.compare(y, x));
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
-        for(int i = 0; i < 10000; i++){
-            int randInt = rand.nextInt() % 1000000;
-            heap.insert(randInt);
-            javaHeap.add(randInt);
+        try{
+            for(int i = 0; i < 10000; i++){
+                int randInt = rand.nextInt() % 1000000;
+                heap.insert(randInt);
+                javaHeap.add(randInt);
+            }
+            for(int i = 0; i < 7000; i++){
+                javaHeap.remove();
+                heap.deleteMin();
+            }
+            Assert.assertEquals(heap.toString(), javaHeap.toString());
         }
-        for(int i = 0; i < 7000; i++){
-            javaHeap.remove();
-            heap.deleteMin();
+        catch (Exception e){
+            e.printStackTrace();
         }
-        Assert.assertEquals(heap.toString(), javaHeap.toString());
+
 
     }
 
