@@ -1,19 +1,12 @@
 import org.junit.*;
 
-import java.lang.annotation.Repeatable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Random;
 
 
 
 public class heapTester{
-
-
-
-
-
 
     @Test
     public void testHeapIntegerInsert(){
