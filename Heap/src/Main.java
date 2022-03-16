@@ -1,38 +1,29 @@
 import java.util.ArrayList;
-
+import java.lang.ProcessBuilder;
 public class Main {
+
+
     public static void main(String[] args){
-
-
-        ArrayList<Integer> list = new ArrayList<>();
-
-        list.add(12);
-        list.add(5);
-        list.add(11);
-        list.add(3);
-        list.add(10);
-        list.add(6);
-        list.add(9);
-        list.add(4);
-        list.add(8);
-        list.add(1);
-        list.add(7);
-        list.add(2);
-
         Heap<Integer> heap = new Heap<>();
 
-        heap.buildHeap(list);
 
-        heap.print();
+        ArrayList<Integer> arrayList = new ArrayList<>();
+
+        arrayList.add(8);
+        arrayList.add(1);
+        arrayList.add(14);
+        arrayList.add(10);
+        arrayList.add(5);
+        arrayList.add(78);
+        arrayList.add(12);
+        arrayList.add(100);
+        arrayList.add(-23);
+        arrayList.add(544);
+        arrayList.add(0);
+        arrayList.add(44);
 
 
-        
-
-
-
-
-
-
+        System.out.println(heap.HeapSort(arrayList));
 
 
 
