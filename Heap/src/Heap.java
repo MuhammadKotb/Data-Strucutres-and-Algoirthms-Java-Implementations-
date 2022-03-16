@@ -58,6 +58,8 @@ public class Heap<T extends Comparable<T>>{
 
     public T deleteMin(){
         T data;
+        if(heap.size() == 0)
+            return null;
         if(heap.size() == 1){
             data = (T)heap.get(heap.size() - 1).getData();
             heap.remove(heap.size() - 1);
@@ -91,7 +93,7 @@ public class Heap<T extends Comparable<T>>{
         Node left = node.getLeft();
         Node right = node.getRight();
         if(left != null && right != null){
-            if(left.data.compareTo(right.data) > 0){
+            if(left.data.compareTo(right.data) >= 0){
                 if(node.data.compareTo(left.data) < 0) {
                     heap.set(node.getIndex(), left);
                     heap.set(left.getIndex(), node);
@@ -142,7 +144,7 @@ public class Heap<T extends Comparable<T>>{
         }
         return sortedElements;
     }
-    public Heap buildHeap(ArrayList<T> arrayList){
+    public void buildHeap(ArrayList<T> arrayList){
         this.heap = new ArrayList<Node>();
         for(int i = 0; i < arrayList.size(); i++){
             heap.add(new Node(arrayList.get(i), i));
@@ -151,13 +153,20 @@ public class Heap<T extends Comparable<T>>{
         for(int i = arrayList.size() / 2 - 1; i >= 0; i--){
             bubbleDown(heap.get(i));
         }
-        return this;
     }
 
-    public void print(){
+    @Override
+    public String toString(){
+        String ret = "";
+        ret += "[";
         for(int i = 0; i < heap.size(); i++){
-            System.out.print(heap.get(i).getData() + "-" + heap.get(i).getIndex() + " ");
+            if(i != heap.size() - 1)
+                ret += heap.get(i).getData() + ", ";
+            else
+                ret += heap.get(i).getData() + "]";
+
         }
+        return ret;
     }
 
 
