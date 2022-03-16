@@ -10,19 +10,16 @@ import java.util.Random;
 
 public class heapTester{
 
-    Heap<Integer> heap = new Heap<>();
-    PriorityQueue<Integer> javaHeap = new PriorityQueue<>((x, y) -> Integer.compare(y, x));
+
+
+
+
 
     @Test
-    public void test(){
-        this.testHeapIntegerInsert();
-        this.testHeapIntegerDeleteMin();
-        this.testHeapSort();
-    }
-
-
     public void testHeapIntegerInsert(){
 
+        Heap<Integer> heap = new Heap<>();
+        PriorityQueue<Integer> javaHeap = new PriorityQueue<>((x, y) -> Integer.compare(y, x));
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
         try{
@@ -39,17 +36,26 @@ public class heapTester{
 
     }
 
+    @Test
     public void testHeapIntegerDeleteMin(){
-
-        for(int i = 0; i < 5000; i++){
+        Heap<Integer> heap = new Heap<>();
+        PriorityQueue<Integer> javaHeap = new PriorityQueue<>((x, y) -> Integer.compare(y, x));
+        Random rand = new Random();
+        rand.setSeed(System.currentTimeMillis());
+        for(int i = 0; i < 10000; i++){
+            int randInt = rand.nextInt() % 1000000;
+            heap.insert(randInt);
+            javaHeap.add(randInt);
+        }
+        for(int i = 0; i < 7000; i++){
             javaHeap.remove();
             heap.deleteMin();
         }
         Assert.assertEquals(heap.toString(), javaHeap.toString());
 
-
     }
 
+    @Test
     public void testHeapSort(){
 
         ArrayList<Integer> arrayList = new ArrayList<>();
