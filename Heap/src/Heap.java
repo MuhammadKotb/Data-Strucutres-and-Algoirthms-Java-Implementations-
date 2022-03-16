@@ -163,9 +163,11 @@ public class Heap<T extends Comparable<T>>{
             if(i != heap.size() - 1)
                 ret += heap.get(i).getData() + ", ";
             else
-                ret += heap.get(i).getData() + "]";
+                ret += heap.get(i).getData();
 
         }
+        ret += "]";
+
         return ret;
     }
 

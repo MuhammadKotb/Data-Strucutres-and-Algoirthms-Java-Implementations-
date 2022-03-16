@@ -40,7 +40,7 @@ public class heapTester{
                 heap.insert(randInt);
                 javaHeap.add(randInt);
             }
-            for(int i = 0; i < 7000; i++){
+            for(int i = 0; i < 8000; i++){
                 javaHeap.remove();
                 heap.deleteMin();
             }
