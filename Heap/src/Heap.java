@@ -56,16 +56,18 @@ public class Heap<T extends Comparable<T>>{
         bubbleUp(newNode);
     }
 
-    public void deleteMin(){
+    public Node deleteMin(){
+        Node deletedNode;
         if(heap.size() == 1)
-            heap.remove(heap.size() - 1);
+             deletedNode = heap.remove(heap.size() - 1);
         else{
             Node lastNode = heap.get(heap.size() - 1);
-            heap.remove(heap.size() - 1);
+            deletedNode = heap.remove(heap.size() - 1);
             lastNode.setInedx(0);
             heap.set(0, lastNode);
             bubbleDown(lastNode);
         }
+        return deletedNode;
     }
 
     private void bubbleUp(Node node){
@@ -128,6 +130,15 @@ public class Heap<T extends Comparable<T>>{
         }
     }
 
+    public ArrayList<T> HeapSort(ArrayList<T> unsortedElements){
+        ArrayList<T> sortedElements = new ArrayList<T>();
+        this.buildHeap(unsortedElements);
+        for (Node node:this.heap) {
+            sortedElements.add((T) this.deleteMin().getData());
+            
+        }
+        return sortedElements;
+    }
     public Heap buildHeap(ArrayList<T> arrayList){
         this.heap = new ArrayList<Node>();
         for(int i = 0; i < arrayList.size(); i++){
