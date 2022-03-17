@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class quickSort<T extends Comparable<T>> implements Sorter {
+public class QuickSort<T extends Comparable<T>> implements Sorter<T> {
 
     private void swap(ArrayList<T> elements, int firstIndex, int secondIndex){
 
@@ -32,7 +32,7 @@ public class quickSort<T extends Comparable<T>> implements Sorter {
 
         return (lower + 1);
     }
-    public void sort(ArrayList unsortedElements, int start, int end) {
+    public void sort(ArrayList<T> unsortedElements, int start, int end) {
         if (start < end) {
 
 
