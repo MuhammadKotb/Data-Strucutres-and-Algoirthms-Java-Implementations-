@@ -1,3 +1,5 @@
+package com.company;
+
 import java.util.ArrayList;
 
 public class QuickSort<T extends Comparable<T>> implements Sorter<T> {
@@ -10,9 +12,6 @@ public class QuickSort<T extends Comparable<T>> implements Sorter<T> {
     }
 
     /**
-     * @param unsortedElements
-     * @param start
-     * @param end
      * @return the index of the pivot after moving the lower elements to left and the greater elements to the right
      */
     private int partition( ArrayList<T> unsortedElements, int start, int end){

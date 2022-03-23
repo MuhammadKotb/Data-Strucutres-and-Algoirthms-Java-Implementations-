@@ -1,4 +1,4 @@
-import org.junit.*;
+import com.company.SelectionSort;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

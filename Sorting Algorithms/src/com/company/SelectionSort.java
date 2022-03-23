@@ -1,6 +1,8 @@
+package com.company;
+
 import java.util.ArrayList;
 
-public class SelectionSort<T extends Comparable<T>> implements Sorter<T>{
+public class SelectionSort<T extends Comparable<T>> implements Sorter<T> {
 
     @Override
     public void sort(ArrayList<T> unsortedElements, int start, int end) {

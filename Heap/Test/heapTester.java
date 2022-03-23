@@ -1,5 +1,4 @@
 import org.junit.*;
-
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Random;
@@ -67,7 +66,7 @@ public class heapTester{
                 arrayList.add(randInt);
             }
             arrayList.sort((x, y) -> Integer.compare(y, x));
-            arrayListHeap = heapBuild.HeapSort(arrayList);
+            arrayListHeap = heapBuild.heapSort(arrayList);
             Assert.assertEquals(arrayListHeap.toString(), arrayList.toString());
         }
         catch (Exception e){

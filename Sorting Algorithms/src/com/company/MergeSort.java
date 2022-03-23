@@ -1,3 +1,5 @@
+package com.company;
+
 import java.util.ArrayList;
 
 public class MergeSort <T extends Comparable<T>> implements Sorter<T> {

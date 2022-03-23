@@ -1,3 +1,5 @@
+package com.company;
+
 import java.util.ArrayList;
 
 public interface Sorter<T extends Comparable<T>> {
