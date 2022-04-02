@@ -58,7 +58,7 @@ public class Heap<T extends Comparable<T>>{
         bubbleUp(newNode);
     }
 
-    public T deleteMin(){
+    public T deleteMax(){
         T data;
         if(heap.size() == 0)
             return null;
@@ -142,7 +142,7 @@ public class Heap<T extends Comparable<T>>{
         ArrayList<T> sortedElements = new ArrayList<T>();
         this.buildHeap(unsortedElements);
         for(int i = 0; i < unsortedElements.size(); i++){
-            sortedElements.add(this.deleteMin());
+            sortedElements.add(this.deleteMax());
         }
         return sortedElements;
     }
