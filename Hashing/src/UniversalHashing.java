@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class UniversalHashing {
-    
+
 
     private static int[][] generateMatrix(int b, int u){
         Random random = new Random();
@@ -24,7 +24,7 @@ public class UniversalHashing {
         return keyVector;
     }
 
-    public static int HashFunction(int key, int size){
+    public static int hashFunction(int key, int size){
         int b = (int)(Math.log(size) / Math.log(2));
         int u = 32, result = 0;
         int[] hx = new int[b];
