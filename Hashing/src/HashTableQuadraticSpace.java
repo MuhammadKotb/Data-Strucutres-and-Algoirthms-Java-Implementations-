@@ -3,7 +3,6 @@ import java.util.ArrayList;
 
 public class HashTableQuadraticSpace<T extends Comparable<T>> {
     private ArrayList<T> hashTable;
-
     private int size;
     private UniversalHashing universalHashing;
 
@@ -38,6 +37,7 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
             return false;
         }else return true;
     }
+
     public boolean remove(T data){
         int hashKey = universalHashing.hashFunction(data.hashCode());
         if(this.hashTable.get(hashKey) == data){
@@ -45,5 +45,13 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
             return true;
         }else return false;
 
+    }
+
+    public boolean isEmpty(){
+        return this.hashTable.isEmpty();
+    }
+
+    public ArrayList<T> getHashTable() {
+        return hashTable;
     }
 }
