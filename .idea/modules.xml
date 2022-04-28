@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AVL Tree/AVL Tree.iml" filepath="$PROJECT_DIR$/AVL Tree/AVL Tree.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/DS.iml" filepath="$PROJECT_DIR$/.idea/DS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Hashing/Hashing.iml" filepath="$PROJECT_DIR$/Hashing/Hashing.iml" />
       <module fileurl="file://$PROJECT_DIR$/Heap/Heap.iml" filepath="$PROJECT_DIR$/Heap/Heap.iml" />
       <module fileurl="file://$PROJECT_DIR$/Red-Black Tree/Red-Black Tree.iml" filepath="$PROJECT_DIR$/Red-Black Tree/Red-Black Tree.iml" />
       <module fileurl="file://$PROJECT_DIR$/Sorting Algorithms/Sorting Algorithms.iml" filepath="$PROJECT_DIR$/Sorting Algorithms/Sorting Algorithms.iml" />
