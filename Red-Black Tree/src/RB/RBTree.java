@@ -2,8 +2,6 @@ package RB;
 
 public class RBTree {
 
-
-
     RBNode root = null;
 
     public void setRoot(RBNode root){

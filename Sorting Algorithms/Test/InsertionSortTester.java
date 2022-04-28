@@ -31,5 +31,4 @@ public class InsertionSortTester {
             e.printStackTrace();
         }
     }
-
 }

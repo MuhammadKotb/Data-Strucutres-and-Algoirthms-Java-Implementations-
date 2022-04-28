@@ -20,6 +20,5 @@ public class SelectionSort<T extends Comparable<T>> implements Sorter<T> {
             unsortedElements.set(minIndex, tempItem);
         }
     }
-
 }
 
