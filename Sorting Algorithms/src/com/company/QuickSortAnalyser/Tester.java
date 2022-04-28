@@ -17,7 +17,7 @@ public class Tester {
     private  ArrayList<String> thirdBatch;
     private  ArrayList<String> fourthBatch;
     private  ArrayList<String> fifthBatch;
-    private Sorter QuickSort = new MergeSort();
+    private Sorter QuickSort = new QuickSort();
 
 
 

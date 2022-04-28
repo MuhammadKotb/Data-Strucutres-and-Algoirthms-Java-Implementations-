@@ -1,11 +1,4 @@
 package com.company.SelectionSortAnalyser;
-
-
-
-
-
-
-import com.company.MergeSort;
 import com.company.Randomizer;
 import com.company.SelectionSort;
 import com.company.Sorter;
@@ -18,7 +11,7 @@ public class Tester {
     private  ArrayList<String> thirdBatch;
     private  ArrayList<String> fourthBatch;
     private  ArrayList<String> fifthBatch;
-    private Sorter SelectionSort = new MergeSort();
+    private Sorter SelectionSort = new SelectionSort();
 
 
 
