@@ -1,9 +1,18 @@
 import java.util.Random;
 
 public class UniversalHashing {
+    private int b, u;
+    private int[][] randomMatrix;
+
+    public UniversalHashing(int size){
+         b = (int)(Math.log(size) / Math.log(2));
+         u = 32;
+        randomMatrix = generateMatrix(b, u);
+
+    }
 
 
-    private static int[][] generateMatrix(int b, int u){
+    private  int[][] generateMatrix(int b, int u){
         Random random = new Random();
         int[][] randomMatrix = new int[b][u];
         for (int i = 0; i < b; i++) {
@@ -15,7 +24,7 @@ public class UniversalHashing {
         return randomMatrix;
     }
 
-    private static int[] getKeyVector(int key){
+    private  int[] getKeyVector(int key){
         int[] keyVector = new int[32];
         for (int i = 0; i < 32; i++) {
             keyVector[i] = key % 2;
@@ -24,16 +33,14 @@ public class UniversalHashing {
         return keyVector;
     }
 
-    public static int hashFunction(int key, int size){
-        int b = (int)(Math.log(size) / Math.log(2));
-        int u = 32, result = 0;
-        int[] hx = new int[b];
-        int[][] randomMatrix = generateMatrix(b, u);
+    public  int hashFunction(int key){
+        int result = 0;
+        int[] hx = new int[this.b];
         int[] keyVector = getKeyVector(key);
-        for (int i = 0; i < b; i++) {
+        for (int i = 0; i < this.b; i++) {
             hx[i] = 0;
-            for (int j = 0; j < u; j++) {
-                hx[i] += (randomMatrix[i][j] * keyVector[j] ) % 2;
+            for (int j = 0; j < this.u; j++) {
+                hx[i] += (this.randomMatrix[i][j] * keyVector[j] ) % 2;
             }
             hx[i] %= 2;
         }

@@ -6,9 +6,7 @@ public class HashTableLinearSpace<T extends Comparable<T>>{
         this.hashTable = new ArrayList<T>(size);
 
     }
-    public static int HashFunction(){
 
-    }
     public void insert(T data) {
 
     }
