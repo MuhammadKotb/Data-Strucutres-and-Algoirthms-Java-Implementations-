@@ -24,7 +24,7 @@ public class HashTableLinearSpace<T extends Comparable<T>>{
         }else{
             ArrayList<T> elements = this.hashTable.get(hashKey).getVaules();
             elements.add(data);
-            this.hashTable.set(hashKey, new HashTableQuadraticSpace<>(elements.size());
+            this.hashTable.set(hashKey, new HashTableQuadraticSpace<>(elements.size()));
             for (T element: elements) {
                 this.hashTable.get(hashKey).insert(element);
             }
