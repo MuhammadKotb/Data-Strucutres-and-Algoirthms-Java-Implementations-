@@ -4,6 +4,8 @@ public class HashTableLinearSpace<T extends Comparable<T>>{
     private ArrayList<HashTableQuadraticSpace<T>> hashTable;
     private int size;
     private UniversalHashing universalHashing;
+    private int collisonsCtr;
+
     HashTableLinearSpace(int size){
         this.hashTable = new ArrayList<>(size);
         this.size = size;
@@ -11,6 +13,7 @@ public class HashTableLinearSpace<T extends Comparable<T>>{
             this.hashTable.set(i, new HashTableQuadraticSpace<>(1));
         }
         this.universalHashing = new UniversalHashing(size);
+        this.collisonsCtr = 0;
     }
 
     public void insert(T data) {
@@ -19,12 +22,13 @@ public class HashTableLinearSpace<T extends Comparable<T>>{
             this.hashTable.get(hashKey).insert(data);
 
         }else{
-            ArrayList<T> elements = this.hashTable.get(hashKey).getHashTable();
+            ArrayList<T> elements = this.hashTable.get(hashKey).getVaules();
             elements.add(data);
             this.hashTable.set(hashKey, new HashTableQuadraticSpace<>((int)Math.sqrt(size)));
             for (T element: elements) {
                 this.hashTable.get(hashKey).insert(element);
             }
+            this.collisonsCtr++;
         }
     }
     public Boolean lookUp(T data){
@@ -36,5 +40,12 @@ public class HashTableLinearSpace<T extends Comparable<T>>{
         int hashKey = universalHashing.hashFunction(data.hashCode());
         return this.hashTable.get(hashKey).remove(data);
 
+    }
+
+    public int getCollisons() {
+        for (HashTableQuadraticSpace table:hashTable) {
+            collisonsCtr += table.getCollisons();
+        }
+        return collisonsCtr;
     }
 }

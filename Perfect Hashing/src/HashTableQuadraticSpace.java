@@ -5,11 +5,13 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
     private ArrayList<T> hashTable;
     private int size;
     private UniversalHashing universalHashing;
+    private int collisonsCtr;
 
     HashTableQuadraticSpace(int size){
         this.hashTable = new ArrayList<T>(size*size);
         this.universalHashing = new UniversalHashing(size*size);
         this.size = size*size;
+        this.collisonsCtr = 0;
 
     }
     public void insert(T data){
@@ -27,6 +29,7 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
             for (T element: elements ) {
                 insert(data);
             }
+            collisonsCtr++;
         }
     }
 
@@ -47,11 +50,16 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
 
     }
 
+    public int getCollisons() {
+        return collisonsCtr;
+    }
+
     public boolean isEmpty(){
         return this.hashTable.isEmpty();
     }
 
-    public ArrayList<T> getHashTable() {
+    public ArrayList<T> getVaules() {
         return hashTable;
     }
+
 }
