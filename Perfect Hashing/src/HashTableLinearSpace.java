@@ -10,7 +10,7 @@ public class HashTableLinearSpace<T extends Comparable<T>>{
         this.hashTable = new ArrayList<>(size);
         this.size = size;
         for (int i = 0; i < size; i++) {
-            this.hashTable.set(i, new HashTableQuadraticSpace<>(1));
+            this.hashTable.add( new HashTableQuadraticSpace<>(1));
         }
         this.universalHashing = new UniversalHashing(size);
         this.collisonsCtr = 0;
@@ -22,7 +22,7 @@ public class HashTableLinearSpace<T extends Comparable<T>>{
             this.hashTable.get(hashKey).insert(data);
 
         }else{
-            ArrayList<T> elements = this.hashTable.get(hashKey).getVaules();
+            ArrayList<T> elements = this.hashTable.get(hashKey).getValues();
             elements.add(data);
             this.hashTable.set(hashKey, new HashTableQuadraticSpace<>(elements.size()));
             for (T element: elements) {

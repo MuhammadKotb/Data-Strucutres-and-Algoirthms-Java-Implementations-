@@ -11,6 +11,10 @@ public class UniversalHashing {
 
     }
 
+    public void regenerateMatrix(){
+        randomMatrix = generateMatrix(b, u);
+
+    }
 
     private  int[][] generateMatrix(int b, int u){
         Random random = new Random();
@@ -47,6 +51,6 @@ public class UniversalHashing {
         for (int k = 0; k < b; k++) {
             result += hx[k]*(Math.pow(2,k));
         }
-        return result;
+        return Math.abs(result) ;
     }
 }

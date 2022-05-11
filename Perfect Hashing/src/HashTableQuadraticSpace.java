@@ -9,10 +9,13 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
 
     HashTableQuadraticSpace(int size){
         this.hashTable = new ArrayList<T>(size*size);
+
         this.universalHashing = new UniversalHashing(size*size);
         this.size = size*size;
         this.collisonsCtr = 0;
-
+        for (int i = 0; i < this.size; i++) {
+            hashTable.add(null);
+        }
     }
     public void insert(T data){
         int hashKey;
@@ -22,12 +25,15 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
 
         }else{
 
-            ArrayList<T> elements = hashTable;
+            ArrayList<T> elements = this.getValues();
             elements.add(data);
-            universalHashing = new UniversalHashing(this.size);
+            universalHashing.regenerateMatrix();
             this.hashTable.clear();
+            for (int i = 0; i < this.size; i++) {
+                hashTable.add(null);
+            }
             for (T element: elements ) {
-                insert(data);
+                this.insert(element);
             }
             collisonsCtr++;
         }
@@ -44,7 +50,7 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
     public boolean remove(T data){
         int hashKey = universalHashing.hashFunction(data.hashCode());
         if(this.hashTable.get(hashKey) == data){
-            this.hashTable.remove(hashKey);
+            this.hashTable.set(hashKey, null);
             return true;
         }else return false;
 
@@ -55,11 +61,22 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
     }
 
     public boolean isEmpty(){
-        return this.hashTable.isEmpty();
+        for (T entry: hashTable) {
+            if(entry != null){
+                return false;
+            }
+        }
+        return true;
     }
 
-    public ArrayList<T> getVaules() {
-        return hashTable;
+    public ArrayList<T> getValues() {
+        ArrayList<T> elements = new ArrayList<>();
+        for (T element: hashTable) {
+            if(element != null){
+                elements.add(element);
+            }
+        }
+        return elements;
     }
 
 }
