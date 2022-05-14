@@ -13,7 +13,7 @@ public class HashTableLinearSpaceTester {
         HashTableLinearSpace<Integer> hashTable = new HashTableLinearSpace<>(hashSize);
         ArrayList<Integer> inputs = new ArrayList<>();
         for(int i = 0; i < hashSize; i++) {
-            int randInt = rand.nextInt() % 1000;
+            int randInt = Math.abs(rand.nextInt() % 1000);
             inputs.add(randInt);
         }
 

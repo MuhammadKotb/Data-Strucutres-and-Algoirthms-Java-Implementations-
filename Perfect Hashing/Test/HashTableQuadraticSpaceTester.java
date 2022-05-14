@@ -7,13 +7,13 @@ import java.util.Random;
 public class HashTableQuadraticSpaceTester {
     @Test
     public void determinedtest(){
-        int hashSize = 10;
+        int hashSize = 25;
         HashTableQuadraticSpace<Integer> hashTable = new HashTableQuadraticSpace<>(hashSize);
         ArrayList<Integer> inputs = new ArrayList<>();
         Random rand = new Random();
 
         for(int i = 0; i < hashSize; i++) {
-            int randInt = rand.nextInt() % 1000;
+            int randInt = Math.abs(rand.nextInt() % 1000);
             inputs.add(randInt);
         }
         System.out.println(inputs);
