@@ -59,4 +59,12 @@ public class HashTableLinearSpace<T extends Comparable<T>> {
         }
         return collisonsCtr;
     }
+
+    public int getSize(){
+        int ctr = 0;
+        for(HashTableQuadraticSpace t : hashTable){
+            ctr += t.getSize();
+        }
+        return ctr;
+    }
 }

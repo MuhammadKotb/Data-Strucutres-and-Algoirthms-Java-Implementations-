@@ -94,4 +94,7 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
     public void setCurrSize(int currSize){
         this.currSize = hashSize;
     }
+    public int getSize(){
+        return this.size;
+    }
 }

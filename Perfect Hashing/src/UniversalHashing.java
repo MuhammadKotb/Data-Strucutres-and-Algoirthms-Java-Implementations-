@@ -27,10 +27,17 @@ public class UniversalHashing {
     }
 
     private int[] getKeyVector(int key) {
+        int tempKey = key;
         int[] keyVector = new int[32];
-        for (int i = 0; i < 32; i++) {
+        for (int i = 1; i < 32; i++) {
             keyVector[i] = key % 2;
             key /= 2;
+        }
+        if(tempKey >= 0){
+            keyVector[0] = 0;
+        }
+        else{
+            keyVector[0] = 1;
         }
         return keyVector;
     }

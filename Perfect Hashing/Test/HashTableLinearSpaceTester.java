@@ -2,23 +2,20 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class HashTableLinearSpaceTester {
     @Test
     public void determinedtest(){
 
-        HashTableLinearSpace<Integer> hashTable = new HashTableLinearSpace<>(10);
+        int hashSize = 30;
+        Random rand = new Random();
+        HashTableLinearSpace<Integer> hashTable = new HashTableLinearSpace<>(hashSize);
         ArrayList<Integer> inputs = new ArrayList<>();
-        inputs.add(5);
-        inputs.add(4);
-        inputs.add(7);
-        inputs.add(9);
-        inputs.add(8);
-        inputs.add(14);
-        inputs.add(11);
-        inputs.add(16);
-        inputs.add(20);
-        inputs.add(54);
+        for(int i = 0; i < hashSize; i++) {
+            int randInt = rand.nextInt() % 1000;
+            inputs.add(randInt);
+        }
 
         try{
             for (int input: inputs) {
@@ -30,11 +27,7 @@ public class HashTableLinearSpaceTester {
         }
 
         System.out.println("Collisions: " + hashTable.getCollisons());
-        Assert.assertEquals(true,hashTable.lookUp(5));
-        Assert.assertEquals(false,hashTable.lookUp(10));
-        Assert.assertEquals(true,hashTable.lookUp(9));
-        Assert.assertEquals(true,hashTable.lookUp(4));
-        hashTable.remove(54);
-        Assert.assertEquals(false,hashTable.lookUp(54));
+        System.out.println(hashTable.getSize());
+
     }
 }
