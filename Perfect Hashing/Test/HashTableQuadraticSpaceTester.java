@@ -27,8 +27,6 @@ public class HashTableQuadraticSpaceTester {
         catch (Exception e){
             e.printStackTrace();
         }
-
-
         System.out.println("Values: " + hashTable.getValues());
         System.out.println(hashTable.getSize());
         System.out.println("Collisions: " + hashTable.getCollisons());
