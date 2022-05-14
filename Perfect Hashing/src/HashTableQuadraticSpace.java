@@ -39,6 +39,7 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
             elements.add(data);
             universalHashing.regenerateMatrix();
             this.hashTable.clear();
+            currSize = 0;
             for (int i = 0; i < this.size; i++) {
                 hashTable.add(null);
             }
@@ -58,6 +59,7 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
         int hashKey = universalHashing.hashFunction(data.hashCode());
         if (this.hashTable.get(hashKey) == data) {
             this.hashTable.set(hashKey, null);
+            currSize--;
             return true;
         } else return false;
 

@@ -27,10 +27,7 @@ public class HashTableLinearSpace<T extends Comparable<T>> {
             this.hashTable.get(hashKey).insert(data);
             currSize++;
 
-        } else if (this.hashTable.get(hashKey).lookUp(data).equals(data)) {
-            this.hashTable.get(hashKey).insert(data);
-        }
-        else {
+        } else {
             ArrayList<T> elements = this.hashTable.get(hashKey).getValues();
             elements.add(data);
             this.hashTable.set(hashKey, new HashTableQuadraticSpace<>(elements.size()));
@@ -48,7 +45,12 @@ public class HashTableLinearSpace<T extends Comparable<T>> {
 
     public boolean remove(T data) {
         int hashKey = universalHashing.hashFunction(data.hashCode());
-        return this.hashTable.get(hashKey).remove(data);
+        if( this.hashTable.get(hashKey).remove(data) ){
+            currSize--;
+            return true;
+        }else {
+            return false;
+        }
     }
 
     public int getCollisons() {
