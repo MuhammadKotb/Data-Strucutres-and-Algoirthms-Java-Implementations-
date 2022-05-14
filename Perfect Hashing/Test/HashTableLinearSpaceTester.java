@@ -20,8 +20,13 @@ public class HashTableLinearSpaceTester {
         inputs.add(20);
         inputs.add(54);
 
-        for (int input: inputs) {
-            hashTable.insert(input);
+        try{
+            for (int input: inputs) {
+                hashTable.insert(input);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
 
         System.out.println("Collisions: " + hashTable.getCollisons());

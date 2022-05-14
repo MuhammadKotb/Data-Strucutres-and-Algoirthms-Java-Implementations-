@@ -8,8 +8,10 @@ public class HashTableQuadraticSpaceTester {
     @Test
     public void determinedtest(){
 
-        HashTableQuadraticSpace<Integer> hashTable = new HashTableQuadraticSpace<>(10);
+        HashTableQuadraticSpace<Integer> hashTable = new HashTableQuadraticSpace<>(100);
         ArrayList<Integer> inputs = new ArrayList<>();
+
+
         inputs.add(5);
         inputs.add(4);
         inputs.add(7);
@@ -20,9 +22,15 @@ public class HashTableQuadraticSpaceTester {
         inputs.add(16);
         inputs.add(20);
         inputs.add(54);
-        for (int input: inputs) {
-            hashTable.insert(input);
+        try{
+            for (int input: inputs) {
+                hashTable.insert(input);
+            }
         }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
 
         System.out.println("Values: " + hashTable.getValues());
         System.out.println("Collisions: " + hashTable.getCollisons());

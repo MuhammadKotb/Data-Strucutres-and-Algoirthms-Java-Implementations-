@@ -2,28 +2,38 @@ import java.util.ArrayList;
 
 
 public class HashTableQuadraticSpace<T extends Comparable<T>> {
-    private ArrayList<T> hashTable;
-    private int size;
-    private UniversalHashing universalHashing;
+    private final ArrayList<T> hashTable;
+    private final int size;
+    private final int hashSize;
+    private int currSize = 0;
+    private final UniversalHashing universalHashing;
     private int collisonsCtr;
 
-    HashTableQuadraticSpace(int size){
-        this.hashTable = new ArrayList<T>(size*size);
-
-        this.universalHashing = new UniversalHashing(size*size);
-        this.size = size*size;
+    HashTableQuadraticSpace(int size) {
+        this.hashTable = new ArrayList<T>(size * size);
+        this.universalHashing = new UniversalHashing(size * size);
+        this.size = size * size;
+        this.hashSize = size;
         this.collisonsCtr = 0;
         for (int i = 0; i < this.size; i++) {
             hashTable.add(null);
         }
     }
-    public void insert(T data){
+
+    public void insert(T data) throws Exception {
         int hashKey;
         hashKey = universalHashing.hashFunction(data.hashCode());
-        if(hashTable.get(hashKey) == null){
+        if(currSize >= this.hashSize){
+            throw new Exception("HashTable Is Full");
+        }
+        if (hashTable.get(hashKey) == null) {
             this.hashTable.set(hashKey, data);
-
-        }else{
+            currSize++;
+        }
+        else if(hashTable.get(hashKey).equals(data)){
+            this.hashTable.set(hashKey, data);
+        }
+        else {
 
             ArrayList<T> elements = this.getValues();
             elements.add(data);
@@ -32,27 +42,24 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
             for (int i = 0; i < this.size; i++) {
                 hashTable.add(null);
             }
-            for (T element: elements ) {
-                this.insert(element);
+            for (T element : elements) {
+                insert(element);
             }
             collisonsCtr++;
         }
     }
 
-    public Boolean lookUp(T data){
+    public Boolean lookUp(T data) {
         int hashKey = universalHashing.hashFunction(data.hashCode());
-
-        if(this.hashTable.get(hashKey) != data){
-            return false;
-        }else return true;
+        return this.hashTable.get(hashKey) == data;
     }
 
-    public boolean remove(T data){
+    public boolean remove(T data) {
         int hashKey = universalHashing.hashFunction(data.hashCode());
-        if(this.hashTable.get(hashKey) == data){
+        if (this.hashTable.get(hashKey) == data) {
             this.hashTable.set(hashKey, null);
             return true;
-        }else return false;
+        } else return false;
 
     }
 
@@ -60,9 +67,9 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
         return collisonsCtr;
     }
 
-    public boolean isEmpty(){
-        for (T entry: hashTable) {
-            if(entry != null){
+    public boolean isEmpty() {
+        for (T entry : hashTable) {
+            if (entry != null) {
                 return false;
             }
         }
@@ -71,12 +78,18 @@ public class HashTableQuadraticSpace<T extends Comparable<T>> {
 
     public ArrayList<T> getValues() {
         ArrayList<T> elements = new ArrayList<>();
-        for (T element: hashTable) {
-            if(element != null){
+        for (T element : hashTable) {
+            if (element != null) {
                 elements.add(element);
             }
         }
         return elements;
     }
 
+    public int getCurrSize() {
+        return currSize;
+    }
+    public void setCurrSize(int currSize){
+        this.currSize = hashSize;
+    }
 }

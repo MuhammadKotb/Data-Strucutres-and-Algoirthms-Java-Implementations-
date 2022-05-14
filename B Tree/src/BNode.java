@@ -1,19 +1,18 @@
 import java.util.ArrayList;
 
 public class BNode<T extends Comparable<T>> {
+
     int order;
     ArrayList<T> keys;
     ArrayList<BNode<T>> children;
     BNode<T> parent;
     public BNode(int order, BNode<T> parent){
-
         this.order = order;
         this.parent = parent;
         this.keys = new ArrayList<>(order - 1);
         this.children = new ArrayList<>(order);
     }
     public BNode(int order){
-
         this.order = order;
         this.parent = null;
         this.keys = new ArrayList<>(order);
