@@ -8,12 +8,12 @@ public class HashTableLinearSpaceTester {
     @Test
     public void determinedtest(){
 
-        int hashSize = 30;
+        int hashSize = 10;
         Random rand = new Random();
         HashTableLinearSpace<Integer> hashTable = new HashTableLinearSpace<>(hashSize);
         ArrayList<Integer> inputs = new ArrayList<>();
         for(int i = 0; i < hashSize; i++) {
-            int randInt = Math.abs(rand.nextInt() % 1000);
+            int randInt = rand.nextInt() % 1000;
             inputs.add(randInt);
         }
 

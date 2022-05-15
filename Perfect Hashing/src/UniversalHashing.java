@@ -28,9 +28,13 @@ public class UniversalHashing {
 
     private int[] getKeyVector(int key) {
         int[] keyVector = new int[32];
-        for (int i = 0; i < 32; i++) {
-            keyVector[i] = key % 2;
-            key /= 2;
+        String binaryKey = Integer.toBinaryString(key);
+        for (int i = 0; i < 32 - binaryKey.length(); i++) {
+            keyVector[i] = 0;
+        }
+        for (int i = 0; i < binaryKey.length(); i++) {
+            keyVector[i + 32 - binaryKey.length()] = Character.getNumericValue(binaryKey.charAt(i));
+
         }
         return keyVector;
     }
@@ -47,7 +51,7 @@ public class UniversalHashing {
             hx[i] %= 2;
         }
         for (int k = 0; k < b; k++) {
-            result += hx[k] * (Math.pow(2, k));
+            result += hx[k] * (Math.pow(2, b - 1 - k));
         }
         return Math.abs(result);
     }
