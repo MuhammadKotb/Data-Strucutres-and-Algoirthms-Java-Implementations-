@@ -77,7 +77,7 @@ public class BTree<T extends Comparable<T>> {
             rightNode.setParent(node);
         } else {
             insert(pivotKey, node.getParent(), true);
-            
+
             leftNode.setParent(node.getParent());
             rightNode.setParent(node.getParent());
 
