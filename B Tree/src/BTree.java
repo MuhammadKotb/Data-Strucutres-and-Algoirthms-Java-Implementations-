@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class BTree<T extends Comparable<T>> {
@@ -11,12 +12,12 @@ public class BTree<T extends Comparable<T>> {
 
 
     public void insert(T key){
-        insert(key, this.root);
+        insert(key, this.root, false);
     }
 
-    public void insert(T key, BNode<T> node) {
+    private void insert(T key, BNode<T> node, boolean recursive) {
 
-        if (node.isLeaf()) {
+        if (node.isLeaf() || recursive) {
             if (node.getKeys().size() == order - 1) {
                 node.getKeys().add(key);
                 Collections.sort(node.getKeys());
@@ -27,11 +28,11 @@ public class BTree<T extends Comparable<T>> {
             }
         } else {
             if (node.getKeys().get(node.getKeys().size() - 1).compareTo(key) < 0) {
-                insert(key, node.getChildren().get(node.getKeys().size()));
+                insert(key, node.getChildren().get(node.getChildren().size() - 1), false);
             } else {
                 for (T element : node.getKeys()) {
                     if (element.compareTo(key) > 0) {
-                        insert(key, node.getChildren().get(node.getKeys().indexOf(element)));
+                        insert(key, node.getChildren().get(node.getKeys().indexOf(element)), false);
                         break;
                     }
                 }
@@ -56,10 +57,10 @@ public class BTree<T extends Comparable<T>> {
         for (int i = pivot + 1; i < order ; i++) {
             rightNode.getKeys().add(node.getKeys().get(i));
         }
-        for (int i = 0; i < (int) Math.ceil((node.getChildren().size() - 1) / 2); i++) {
+        for (int i = 0; i < (int) Math.ceil((node.getChildren().size() - 1) / 2.0); i++) {
             leftNode.getChildren().add(node.getChildren().get(i));
         }
-        for (int i = (int) Math.ceil((node.getChildren().size() - 1) / 2); i < node.getChildren().size(); i++) {
+        for (int i = (int) Math.ceil((node.getChildren().size() - 1) / 2.0); i < node.getChildren().size(); i++) {
             rightNode.getChildren().add(node.getChildren().get(i));
         }
 
@@ -75,16 +76,28 @@ public class BTree<T extends Comparable<T>> {
             leftNode.setParent(node);
             rightNode.setParent(node);
         } else {
-            insert(pivotKey, node.getParent());
-
+            insert(pivotKey, node.getParent(), true);
+            
             leftNode.setParent(node.getParent());
             rightNode.setParent(node.getParent());
 
-            node.getParent().getChildren().set(node.getParent().getKeys().indexOf(pivotKey), leftNode);
-            node.getParent().getChildren().set(node.getParent().getKeys().indexOf(pivotKey)+1, rightNode);
+            node.getParent().getChildren().set(findIndex(node.getParent().getKeys(), leftNode.getKeys().get(0)), leftNode);
+            node.getParent().getChildren().add(findIndex(node.getParent().getKeys(), rightNode.getKeys().get(0)), rightNode);
 
+            node.setParent(null);
         }
 
+    }
+
+    private int findIndex(ArrayList<T> arr, T target){
+        for (int i = 0; i < arr.size(); i++)
+        {
+            if(target.compareTo(arr.get(i)) < 0)
+            {
+                return i;
+            }
+        }
+        return arr.size();
     }
 
 }
