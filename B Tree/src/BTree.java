@@ -57,10 +57,10 @@ public class BTree<T extends Comparable<T>> {
         for (int i = pivot + 1; i < order ; i++) {
             rightNode.getKeys().add(node.getKeys().get(i));
         }
-        for (int i = 0; i < (int) Math.ceil((node.getChildren().size() - 1) / 2.0); i++) {
+        for (int i = 0; i < (int) ((node.getChildren().size() - 1) / 2.0); i++) {
             leftNode.getChildren().add(node.getChildren().get(i));
         }
-        for (int i = (int) Math.ceil((node.getChildren().size() - 1) / 2.0); i < node.getChildren().size(); i++) {
+        for (int i = (int) ((node.getChildren().size() - 1) / 2.0); i < node.getChildren().size(); i++) {
             rightNode.getChildren().add(node.getChildren().get(i));
         }
 
@@ -75,6 +75,13 @@ public class BTree<T extends Comparable<T>> {
 
             leftNode.setParent(node);
             rightNode.setParent(node);
+
+            for (BNode<T> child: leftNode.getChildren()) {
+                child.setParent(leftNode);
+            }
+            for (BNode<T> child: rightNode.getChildren()) {
+                child.setParent(rightNode);
+            }
         } else {
             insert(pivotKey, node.getParent(), true);
 
