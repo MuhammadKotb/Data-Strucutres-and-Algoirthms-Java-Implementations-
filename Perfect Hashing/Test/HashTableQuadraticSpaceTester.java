@@ -13,7 +13,7 @@ public class HashTableQuadraticSpaceTester {
         Random rand = new Random();
 
         for(int i = 0; i < hashSize; i++) {
-            int randInt = Math.abs(rand.nextInt() % 1000);
+            int randInt = rand.nextInt() % 1000;
             inputs.add(randInt);
         }
         System.out.println(inputs);

@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -25,6 +26,7 @@ public class BTree<T extends Comparable<T>> {
     }
 
     private void insert(T key, BNode<T> node, boolean recursive) {
+
 
         if (node.isLeaf() || recursive) {
             if (node.getKeys().size() == order - 1) {
@@ -90,6 +92,7 @@ public class BTree<T extends Comparable<T>> {
                 child.setParent(leftNode);
             }
             for (BNode<T> child : rightNode.getChildren()) {
+
                 child.setParent(rightNode);
             }
         } else {
@@ -103,6 +106,7 @@ public class BTree<T extends Comparable<T>> {
             node.getParent().getChildren().add(findIndex(node.getParent().getKeys(), rightNode.getKeys().get(0)),
                     rightNode);
 
+
             node.setParent(null);
         }
 
@@ -111,6 +115,7 @@ public class BTree<T extends Comparable<T>> {
     private int findIndex(List<T> arr, T target) {
         for (int i = 0; i < arr.size(); i++) {
             if (target.compareTo(arr.get(i)) < 0) {
+
                 return i;
             }
         }
