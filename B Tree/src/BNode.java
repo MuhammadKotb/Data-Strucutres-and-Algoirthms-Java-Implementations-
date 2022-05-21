@@ -9,17 +9,19 @@ public class BNode<T extends Comparable<T>> {
     private List<T> keys;
     private List<BNode<T>> children;
     private BNode<T> parent;
-
+    private int minimumKeys;
 
     public BNode(int order, BNode<T> parent) {
         this.order = order;
         this.parent = parent;
+        this.minimumKeys = ((order + 1) / 2) - 1;
         this.keys = new ArrayList<>(order - 1);
         this.children = new ArrayList<>(order);
     }
 
     public BNode(int order) {
         this.order = order;
+        this.minimumKeys = ((order + 1) / 2) - 1;
         this.parent = null;
         this.keys = new ArrayList<>(order);
         this.children = new ArrayList<>(order);
@@ -46,8 +48,12 @@ public class BNode<T extends Comparable<T>> {
         if(childIndex - 1 < 0) return null;
         return parent.getChildren().get(childIndex - 1);
     }
+    public int getMinimumKeys(){
+        if(this.parent == null) return 1;
+        return this.minimumKeys;
+    }
     public boolean minimumNumOfkeys(){
-        return (this.getKeys().size() - 1) < ((int)Math.ceil(this.order/2) - 1);
+        return (this.getKeys().size() - 1) <  this.getMinimumKeys();
     }
     public T getIncludedKeyleftSibling(){
         int leftIndex = this.leftSibling().childIndex();

@@ -158,7 +158,7 @@ public class BTree<T extends Comparable<T>> {
                 remove(node.getChildren().get(node.getChildren().size() - 1), key);
             }
         }
-        if (node.getKeys().size() < ((int) Math.ceil(this.order / 2) - 1)) {
+        if (node.getKeys().size() < node.getMinimumKeys()) {
             BNode<T> left = node.leftSibling();
             BNode<T> right = node.rightSibling();
             if (left != null && !left.minimumNumOfkeys())
@@ -171,6 +171,7 @@ public class BTree<T extends Comparable<T>> {
                 mergeRight(node);
             if(node.getParent() == null){
                 this.root = node.getChildren().get(0);
+                this.root.setParent(null);
             }
         }
     }
@@ -260,7 +261,6 @@ public class BTree<T extends Comparable<T>> {
         parent.getKeys().add(maxSib);
         node.getKeys().add(maxP);
         Collections.sort(parent.getKeys());
-        Collections.sort(left.getKeys());
         Collections.sort(node.getKeys());
 
     }
@@ -282,7 +282,6 @@ public class BTree<T extends Comparable<T>> {
         parent.getKeys().add(minSib);
         node.getKeys().add(minP);
         Collections.sort(parent.getKeys());
-        Collections.sort(right.getKeys());
         Collections.sort(node.getKeys());
 
     }
