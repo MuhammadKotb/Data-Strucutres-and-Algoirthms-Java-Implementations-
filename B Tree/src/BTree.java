@@ -6,7 +6,7 @@ public class BTree<T extends Comparable<T>> {
 
     public BTree(int order) {
         this.order = order;
-        this.root = new BNode<T>(order);
+        this.root = new BNode<>(order);
     }
 
     @SafeVarargs
