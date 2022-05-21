@@ -8,29 +8,21 @@ public class Tester {
     @Test
     public void insertionTest(){
 
-        ArrayList<Integer> data = new ArrayList<>();
+
         BTree<Integer> bTree = new BTree<>(4);
-//        Random rand = new Random();
-//        for (int i = 0; i < size; i++) {
-//            data.add(rand.nextInt());
-//        }
-        data.add(5);
-        data.add(3);
-        data.add(21);
-        data.add(9);
-        data.add(1);
-        data.add(13);
-        data.add(2);
-        data.add(7);
-        data.add(10);
-        data.add(12);
-        data.add(4);
-        data.add(8);
-        for (int i = 0; i < data.size(); i++) {
-            System.out.println(i);
-            bTree.insert(data.get(i));
-        }
-
-
+        bTree.insertAll(5,3,21,9,1,13,2,7,10,12,4,8);
+        bTree.traverseTree();
+        System.out.println("=====================");
+        bTree.delete(9);
+        bTree.traverseTree();
+        System.out.println("=====================");
+        bTree.delete(4);
+        bTree.traverseTree();
+        System.out.println("=====================");
+        bTree.delete(12);
+        bTree.traverseTree();
+        System.out.println("=====================");
+        bTree.delete(7);
+        bTree.traverseTree();
     }
 }

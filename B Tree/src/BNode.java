@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,35 +24,40 @@ public class BNode<T extends Comparable<T>> {
         this.children = new ArrayList<>(order);
     }
 
-    public int childIndex(){
-        for(int i = 0; i < this.getParent().getChildren().size(); i++){
-            if(this.getParent().getChildren().get(i).equals(this)) return i;
+    public int childIndex() {
+        for (int i = 0; i < this.getParent().getChildren().size(); i++) {
+            if (this.getParent().getChildren().get(i).equals(this)) return i;
         }
         return -1;
     }
-    public BNode<T> rightSibling(){
-        if(this.getParent() == null) return null;
+
+    public BNode<T> rightSibling() {
+        if (this.getParent() == null) return null;
         int childIndex = childIndex();
         BNode<T> parent = this.getParent();
-        if(childIndex + 1 >= this.order) return null;
-        if(childIndex + 1 >= parent.getChildren().size()) return null;
+        if (childIndex + 1 >= this.order) return null;
+        if (childIndex + 1 >= parent.getChildren().size()) return null;
         return parent.getChildren().get(childIndex + 1);
     }
-    public BNode<T> leftSibling(){
-        if(this.getParent() == null) return null;
+
+    public BNode<T> leftSibling() {
+        if (this.getParent() == null) return null;
         int childIndex = childIndex();
         BNode<T> parent = this.getParent();
-        if(childIndex - 1 < 0) return null;
+        if (childIndex - 1 < 0) return null;
         return parent.getChildren().get(childIndex - 1);
     }
-    public boolean minimumNumOfkeys(){
-        return (this.getKeys().size() - 1) < ((int)Math.ceil(this.order/2) - 1);
+
+    public boolean minimumNumOfkeys() {
+        return (this.getKeys().size() - 1) < ((int) Math.ceil(this.order / 2) - 1);
     }
-    public T getIncludedKeyleftSibling(){
+
+    public T getIncludedKeyleftSibling() {
         int leftIndex = this.leftSibling().childIndex();
         return this.getParent().getKeys().get(leftIndex);
     }
-    public T getIncludedKeyRightSibling(){
+
+    public T getIncludedKeyRightSibling() {
         return this.getParent().getKeys().get(this.childIndex());
     }
 
@@ -66,6 +70,12 @@ public class BNode<T extends Comparable<T>> {
     }
 
     public void addKey(T key) {
+        for (int i = 0; i < this.keys.size(); i++) {
+            if (this.keys.get(i).compareTo(key) > 0) {
+                this.keys.add(i, key);
+                return;
+            }
+        }
         this.keys.add(key);
     }
 
@@ -73,12 +83,12 @@ public class BNode<T extends Comparable<T>> {
         return keys;
     }
 
-    public void setParent(BNode<T> parent) {
-        this.parent = parent;
-    }
-
     public BNode<T> getParent() {
         return parent;
+    }
+
+    public void setParent(BNode<T> parent) {
+        this.parent = parent;
     }
 
     public boolean isLeaf() {
@@ -86,7 +96,7 @@ public class BNode<T extends Comparable<T>> {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.keys.toString();
     }
 }
