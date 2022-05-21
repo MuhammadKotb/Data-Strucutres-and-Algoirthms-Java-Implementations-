@@ -125,9 +125,7 @@ public class BTree<T extends Comparable<T>> {
 
         if (node.getKeys().contains(key)) {
             if (node.isLeaf()) {
-                if (node.getKeys().contains(key)) {
-                    node.getKeys().remove(key);
-                }
+                node.getKeys().remove(key);
             } else {
                 int keyIndex = node.getKeys().indexOf(key);
                 T temp = this.getInorderPred(node.getChildren().get(keyIndex));
@@ -136,6 +134,7 @@ public class BTree<T extends Comparable<T>> {
                 remove(node.getChildren().get(keyIndex), temp);
             }
         } else {
+            if(node.isLeaf()) return;
             boolean found = false;
             for (int i = 0; i < node.getKeys().size(); i++) {
                 if (key.compareTo(node.getKeys().get(i)) < 0) {
