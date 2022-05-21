@@ -24,5 +24,14 @@ public class Tester {
         System.out.println("=====================");
         bTree.delete(7);
         bTree.traverseTree();
+        System.out.println("=====================");
+        bTree.delete(5);
+        bTree.traverseTree();
+        System.out.println("=====================");
+        bTree.delete(5);
+        bTree.traverseTree();
+        System.out.println("=====================");
+        bTree.delete(13);
+        bTree.traverseTree();
     }
 }
