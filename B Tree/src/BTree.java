@@ -1,7 +1,12 @@
+
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.Collections;
+import java.util.Comparator;
 
 public class BTree<T extends Comparable<T>> {
-    private BNode<T> root;
+    public BNode<T> root;
     private int order;
 
     public BTree(int order) {
@@ -9,14 +14,19 @@ public class BTree<T extends Comparable<T>> {
         this.root = new BNode<T>(order);
     }
 
-
-    public void insert(T key){
-        insert(key, this.root);
+    public void insertAll(T... key) {
+        for (T k : key) {
+            insert(k, this.root, false);
+        }
     }
 
-    public void insert(T key, BNode<T> node) {
+    public void insert(T key) {
+        insert(key, this.root, false);
+    }
 
-        if (node.isLeaf()) {
+    private void insert(T key, BNode<T> node, boolean recursive) {
+
+        if (node.isLeaf() || recursive) {
             if (node.getKeys().size() == order - 1) {
                 node.getKeys().add(key);
                 Collections.sort(node.getKeys());
@@ -27,11 +37,11 @@ public class BTree<T extends Comparable<T>> {
             }
         } else {
             if (node.getKeys().get(node.getKeys().size() - 1).compareTo(key) < 0) {
-                insert(key, node.getChildren().get(node.getKeys().size()));
+                insert(key, node.getChildren().get(node.getChildren().size() - 1), false);
             } else {
                 for (T element : node.getKeys()) {
                     if (element.compareTo(key) > 0) {
-                        insert(key, node.getChildren().get(node.getKeys().indexOf(element)));
+                        insert(key, node.getChildren().get(node.getKeys().indexOf(element)), false);
                         break;
                     }
                 }
@@ -49,17 +59,18 @@ public class BTree<T extends Comparable<T>> {
         BNode<T> leftNode = new BNode<>(order);
         BNode<T> rightNode = new BNode<>(order);
 
-        // split the original node into two nodes according to the greater than the middle key and the smaller than the middle key
+        // split the original node into two nodes according to the greater than the
+        // middle key and the smaller than the middle key
         for (int i = 0; i < pivot; i++) {
             leftNode.getKeys().add(node.getKeys().get(i));
         }
-        for (int i = pivot + 1; i < order ; i++) {
+        for (int i = pivot + 1; i < order; i++) {
             rightNode.getKeys().add(node.getKeys().get(i));
         }
-        for (int i = 0; i < (int) Math.ceil((node.getChildren().size() - 1) / 2); i++) {
+        for (int i = 0; i < (int) ((node.getChildren().size() - 1) / 2.0); i++) {
             leftNode.getChildren().add(node.getChildren().get(i));
         }
-        for (int i = (int) Math.ceil((node.getChildren().size() - 1) / 2); i < node.getChildren().size(); i++) {
+        for (int i = (int) ((node.getChildren().size() - 1) / 2.0); i < node.getChildren().size(); i++) {
             rightNode.getChildren().add(node.getChildren().get(i));
         }
 
@@ -74,16 +85,234 @@ public class BTree<T extends Comparable<T>> {
 
             leftNode.setParent(node);
             rightNode.setParent(node);
+
+            for (BNode<T> child : leftNode.getChildren()) {
+                child.setParent(leftNode);
+            }
+            for (BNode<T> child : rightNode.getChildren()) {
+                child.setParent(rightNode);
+            }
         } else {
-            insert(pivotKey, node.getParent());
+            insert(pivotKey, node.getParent(), true);
 
             leftNode.setParent(node.getParent());
             rightNode.setParent(node.getParent());
 
-            node.getParent().getChildren().set(node.getParent().getKeys().indexOf(pivotKey), leftNode);
-            node.getParent().getChildren().set(node.getParent().getKeys().indexOf(pivotKey)+1, rightNode);
+            node.getParent().getChildren().set(findIndex(node.getParent().getKeys(), leftNode.getKeys().get(0)),
+                    leftNode);
+            node.getParent().getChildren().add(findIndex(node.getParent().getKeys(), rightNode.getKeys().get(0)),
+                    rightNode);
+
+            node.setParent(null);
+        }
+
+    }
+
+    private int findIndex(List<T> arr, T target) {
+        for (int i = 0; i < arr.size(); i++) {
+            if (target.compareTo(arr.get(i)) < 0) {
+                return i;
+            }
+        }
+        return arr.size();
+    }
+
+    public void delete(T key) {
+        remove(this.root, key);
+    }
+
+    private void remove(BNode<T> node, T key) {
+        if (node == null)
+            return;
+
+        if(node.getKeys().contains(key)){
+            if (node.isLeaf()) {
+                if (node.getKeys().contains(key)) {
+                    node.getKeys().remove(key);
+                }
+            }
+            else{
+                int keyIndex = node.getKeys().indexOf(key);
+                T temp = this.getInorderPred(node.getChildren().get(keyIndex));
+                node.getKeys().remove(key);
+                node.getKeys().add(temp);
+                Collections.sort(node.getKeys());
+                remove(node.getChildren().get(keyIndex), temp);
+            }
+        }
+        else{
+            boolean fonud = false;
+            for (int i = 0; i < node.getKeys().size(); i++) {
+                if (key.compareTo(node.getKeys().get(i)) < 0) {
+                    fonud = true;
+                    remove(node.getChildren().get(i), key);
+                    break;
+                }
+            }
+            if (!fonud) {
+                remove(node.getChildren().get(node.getChildren().size() - 1), key);
+            }
+        }
+        if (node.getKeys().size() < ((int) Math.ceil(this.order / 2) - 1)) {
+            BNode<T> left = node.leftSibling();
+            BNode<T> right = node.rightSibling();
+            if (left != null && !left.minimumNumOfkeys())
+                takefromLeftSibling(node);
+            else if (right != null && !right.minimumNumOfkeys())
+                takefromRightSibling(node);
+            else if (left != null && left.minimumNumOfkeys())
+                mergeLeft(node);
+            else if (right != null && right.minimumNumOfkeys())
+                mergeRight(node);
+            if(node.getParent() == null){
+                this.root = node.getChildren().get(0);
+            }
+        }
+    }
+
+    private void mergeLeft(BNode<T> node) {
+        BNode<T> left = node.leftSibling();
+        BNode<T> parent = node.getParent();
+        T keyBetween = node.getIncludedKeyleftSibling();
+        parent.getChildren().remove(left);
+        parent.getChildren().remove(node);
+
+        parent.getKeys().remove(keyBetween);
+        BNode<T> newNode = new BNode<>(order);
+
+        for (int i = 0; i < left.getKeys().size(); i++) {
+            newNode.getKeys().add(left.getKeys().get(i));
+        }
+        newNode.getKeys().add(keyBetween);
+        for (int i = 0; i < node.getKeys().size(); i++) {
+            newNode.getKeys().add(node.getKeys().get(i));
+        }
+        for (int i = 0; i < left.getChildren().size(); i++) {
+            newNode.getChildren().add(left.getChildren().get(i));
+            left.getChildren().get(i).setParent(newNode);
+        }
+        for (int i = 0; i < node.getChildren().size(); i++) {
+            newNode.getChildren().add(node.getChildren().get(i));
+            node.getChildren().get(i).setParent(newNode);
+        }
+        parent.addChild(newNode);
+        newNode.setParent(parent);
+        Collections.sort(parent.getKeys());
+        this.sortChildren(parent.getChildren());
+
+    }
+
+    private void mergeRight(BNode<T> node) {
+        BNode<T> right = node.rightSibling();
+        BNode<T> parent = node.getParent();
+        T keyBetween = node.getIncludedKeyRightSibling();
+        parent.getChildren().remove(right);
+        parent.getChildren().remove(node);
+
+        parent.getKeys().remove(keyBetween);
+        BNode<T> newNode = new BNode<>(order);
+
+        for (int i = 0; i < node.getKeys().size(); i++) {
+            newNode.getKeys().add(node.getKeys().get(i));
+        }
+        newNode.getKeys().add(keyBetween);
+        for (int i = 0; i < right.getKeys().size(); i++) {
+            newNode.getKeys().add(right.getKeys().get(i));
+        }
+        for (int i = 0; i < node.getChildren().size(); i++) {
+            newNode.getChildren().add(node.getChildren().get(i));
+            node.getChildren().get(i).setParent(newNode);
+        }
+
+        for (int i = 0; i < right.getChildren().size(); i++) {
+            newNode.getChildren().add(right.getChildren().get(i));
+            right.getChildren().get(i).setParent(newNode);
 
         }
+
+        parent.addChild(newNode);
+        newNode.setParent(parent);
+        Collections.sort(parent.getKeys());
+        this.sortChildren(parent.getChildren());
+
+    }
+
+    public void takefromLeftSibling(BNode<T> node) {
+        BNode<T> parent = node.getParent();
+        BNode<T> left = node.leftSibling();
+        T maxP, maxSib;
+        int sibsize = left.getKeys().size();
+        maxSib = left.getKeys().get(sibsize - 1);
+        maxP = node.getIncludedKeyleftSibling();
+        int keyIndex = left.getKeys().indexOf(maxSib);
+        if (!left.isLeaf()) {
+            node.getChildren().add(left.getChildren().get(keyIndex));
+            left.getChildren().get(keyIndex).setParent(node);
+            left.getChildren().remove(keyIndex);
+        }
+        parent.getKeys().remove(maxP);
+        left.getKeys().remove(maxSib);
+        parent.getKeys().add(maxSib);
+        node.getKeys().add(maxP);
+        Collections.sort(parent.getKeys());
+        Collections.sort(left.getKeys());
+        Collections.sort(node.getKeys());
+
+    }
+
+    public void takefromRightSibling(BNode<T> node) {
+        BNode<T> parent = node.getParent();
+        BNode<T> right = node.rightSibling();
+        T minP, minSib;
+        minSib = right.getKeys().get(0);
+        minP = node.getIncludedKeyRightSibling();
+        int keyIndex = right.getKeys().indexOf(minSib);
+        if (!right.isLeaf()) {
+            node.getChildren().add(right.getChildren().get(keyIndex));
+            right.getChildren().get(keyIndex).setParent(node);
+            right.getChildren().remove(keyIndex);
+        }
+        parent.getKeys().remove(minP);
+        right.getKeys().remove(minSib);
+        parent.getKeys().add(minSib);
+        node.getKeys().add(minP);
+        Collections.sort(parent.getKeys());
+        Collections.sort(right.getKeys());
+        Collections.sort(node.getKeys());
+
+    }
+
+    private T getInorderPred(BNode<T> node){
+        if(node.isLeaf()) return node.getKeys().get(node.getKeys().size() - 1);
+        else return getInorderPred(node.getChildren().get(node.getChildren().size() - 1));
+    }
+    private T getInorderSucc(BNode<T> node){
+        if(node.isLeaf()) return node.getKeys().get(0);
+        else return getInorderSucc(node.getChildren().get(0));
+    }
+
+    public void traverseTree() {
+        this.traverse(this.root);
+    }
+
+    private void traverse(BNode<T> root) {
+        if (root != null) {
+            System.out.println(root + " " + root.getChildren().size());
+            for (BNode<T> node : root.getChildren()) {
+                traverse(node);
+            }
+
+        }
+    }
+
+    private void sortChildren(List<BNode<T>> children) {
+        Comparator<BNode<T>> comparator = new Comparator<BNode<T>>() {
+            @Override
+            public int compare(BNode<T> o1, BNode<T> o2) {
+                return o1.getKeys().get(0).compareTo(o2.getKeys().get(0));
+            }
+        };
+        Collections.sort(children, comparator);
 
     }
 
