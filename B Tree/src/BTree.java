@@ -286,6 +286,20 @@ public class BTree<T extends Comparable<T>> {
         }
     }
 
+    public int traverseandCount(String word){
+       return traverseandCount(this.root, word,0);
+    }
+    private int traverseandCount(BNode<T> root, String word, int count){
+        if (root != null) {
+            if(root.equals(word))
+                count++;
+            for (BNode<T> node : root.getChildren()) {
+                count += traverseandCount(node, word, 0);
+            }
+        }
+        return count;
+    }
+
 
 
 }
