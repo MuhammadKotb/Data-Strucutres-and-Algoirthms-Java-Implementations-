@@ -300,6 +300,23 @@ public class BTree<T extends Comparable<T>> {
         return count;
     }
 
+    public int search(String word){
+        return search(root, word);
+    }
+
+    private int search(BNode<T> root, String word){
+        if (root != null) {
+            for(T key: root.getKeys()){
+                if(key.equals(word))
+                    return root.keyCount;
+            }
+            for (BNode<T> node : root.getChildren()) {
+                search(node, word);
+            }
+        }
+        return 0;
+    }
+
 
 
 }

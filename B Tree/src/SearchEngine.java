@@ -91,7 +91,7 @@ public class SearchEngine {
         }
     }
 
-    public void deleteWebPage(String filePath){
+   public void deleteWebPage(String filePath){
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -121,14 +121,14 @@ public class SearchEngine {
         for(var elem: btreesArr){
             BTree btree = (BTree) elem[1];
             String id = (String) elem[0];
-            int count = btree.traverseandCount(word);
+            int count = btree.search(word);
             if(count > 0)
                 srArr.add(new SearchResult(id, count));
         }
         return srArr;
     }
 
-    /*public List<ISearchResult> searchByMultipleWordWithRanking(String sentence){
+    public List<ISearchResult> searchByMultipleWordWithRanking(String sentence){
         List<ISearchResult> srArr;
         List<Object[]> btreesArr2 = this.btreesArr;
         String[] words = sentence.split("\\s+");
@@ -137,16 +137,23 @@ public class SearchEngine {
             for(var elem: btreesArr2){
                 String id = (String) elem[0];
                 BTree btree = (BTree) elem[1];
-                int count = btree.traverseandCount(words[i]);
-                if(count > 0){
-                    srArr.add(new SearchResult(id, count));
-                }else{
+                int count = btree.search(words[i]);
+                if(count == 0)
                     btreesArr2.remove(elem);
-                }
+                else
             }
         }
         for()
-    }*/
+    }
+    static class tmp{
+        public String name;
+        public int age;
+
+        public tmp(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+    }
     public static void main(String args[]){/*
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
@@ -167,5 +174,14 @@ public class SearchEngine {
         } catch (SAXException e) {
             e.printStackTrace();
         }*/
+        List<tmp> arr = new ArrayList<>();
+        for(int i=0; i<5; i++){
+            arr.add(new SearchEngine.tmp("Ahmed", i));
+        }
+        if(arr.contains(new SearchEngine.tmp("Ahmed", 2))){
+            System.out.println("HEEEEE");
+        }else{
+            System.out.println("hhhhhhhhhhh");
+        }
     }
 }
