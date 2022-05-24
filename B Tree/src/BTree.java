@@ -12,18 +12,22 @@ public class BTree<T extends Comparable<T>> {
     @SafeVarargs
     public final void insertAll(T... key) {
         for (T k : key) {
-            insert(k, this.root, false);
+            insert(k, this.root);
         }
     }
 
     public void insert(T key) {
-        insert(key, this.root, false);
+        insert(key, this.root);
     }
 
-    private void insert(T key, BNode<T> node, boolean recursive) {
+    private void insert(T key, BNode<T> node) {
+        BNode<T>.Key target = lookUp(key);
+        if(target != null){
+            target.incrCounter();
+            return;
+        }
 
-
-        if (node.isLeaf() || recursive) {
+        if (node.isLeaf() ) {
             if (node.getKeys().size() == order - 1) {
                 node.addKeyOrdered(key);
                 split(node);
@@ -31,16 +35,19 @@ public class BTree<T extends Comparable<T>> {
                 node.addKeyOrdered(key);
             }
         } else {
-            if (node.getKeys().get(node.getKeys().size() - 1).compareTo(key) < 0) {
-                insert(key, node.getChildren().get(node.getChildren().size() - 1), false);
+            if (node.getKeys().get(node.getKeys().size() - 1).getValue().compareTo(key) < 0) {
+                insert(key, node.getChildren().get(node.getChildren().size() - 1));
             } else {
-                for (T element : node.getKeys()) {
-                    if (element.compareTo(key) > 0) {
-                        insert(key, node.getChildren().get(node.getKeys().indexOf(element)), false);
+                for (BNode<T>.Key element : node.getKeys()) {
+                    if (element.getValue().compareTo(key) > 0) {
+                        insert(key, node.getChildren().get(node.getKeys().indexOf(element)));
                         break;
                     }
                 }
             }
+        }
+        if( node.getKeys().size() >= order ){
+            split(node);
         }
     }
 
@@ -48,7 +55,7 @@ public class BTree<T extends Comparable<T>> {
 
         // get the middle key
         int pivot = (order - 1) / 2;
-        T pivotKey = node.getKeys().get(pivot);
+        T pivotKey = node.getKeys().get(pivot).getValue();
 
         // init left and right nodes to split the original node into them
         BNode<T> leftNode = new BNode<>(order);
@@ -57,16 +64,22 @@ public class BTree<T extends Comparable<T>> {
         // split the original node into two nodes according to the greater than the
         // middle key and the smaller than the middle key
         for (int i = 0; i < pivot; i++) {
-            leftNode.addKeyOrdered(node.getKeys().get(i));
+            leftNode.addKeyOrdered(node.getKeys().get(i).getValue());
         }
         for (int i = pivot + 1; i < order; i++) {
-            rightNode.addKeyOrdered(node.getKeys().get(i));
+            rightNode.addKeyOrdered(node.getKeys().get(i).getValue());
         }
-        for (int i = 0; i < (int) ((node.getChildren().size() - 1) / 2.0); i++) {
+        for (int i = 0; i < (int) Math.ceil((node.getChildren().size() - 1) / 2.0); i++) {
             leftNode.addChildOrdered(node.getChildren().get(i));
         }
-        for (int i = (int) ((node.getChildren().size() - 1) / 2.0); i < node.getChildren().size(); i++) {
+        for (int i = (int) Math.ceil((node.getChildren().size() - 1) / 2.0); i < node.getChildren().size(); i++) {
             rightNode.addChildOrdered(node.getChildren().get(i));
+        }
+        for (BNode<T> child : leftNode.getChildren()) {
+            child.setParent(leftNode);
+        }
+        for (BNode<T> child : rightNode.getChildren()) {
+            child.setParent(rightNode);
         }
 
         // push the middle key up and modify the pointers
@@ -81,22 +94,17 @@ public class BTree<T extends Comparable<T>> {
             leftNode.setParent(node);
             rightNode.setParent(node);
 
-            for (BNode<T> child : leftNode.getChildren()) {
-                child.setParent(leftNode);
-            }
-            for (BNode<T> child : rightNode.getChildren()) {
 
-                child.setParent(rightNode);
-            }
         } else {
-            insert(pivotKey, node.getParent(), true);
+//            insert(pivotKey, node.getParent(), true);
+            node.getParent().addKeyOrdered(pivotKey);
 
             leftNode.setParent(node.getParent());
             rightNode.setParent(node.getParent());
 
-            node.getParent().getChildren().set(findIndex(node.getParent().getKeys(), leftNode.getKeys().get(0)),
+            node.getParent().getChildren().set(findIndex(node.getParent().getKeys(), leftNode.getKeys().get(0).getValue()),
                     leftNode);
-            node.getParent().getChildren().add(findIndex(node.getParent().getKeys(), rightNode.getKeys().get(0)),
+            node.getParent().getChildren().add(findIndex(node.getParent().getKeys(), rightNode.getKeys().get(0).getValue()),
                     rightNode);
 
 
@@ -105,9 +113,9 @@ public class BTree<T extends Comparable<T>> {
 
     }
 
-    private int findIndex(List<T> arr, T target) {
+    private int findIndex(List<BNode<T>.Key> arr, T target) {
         for (int i = 0; i < arr.size(); i++) {
-            if (target.compareTo(arr.get(i)) < 0) {
+            if (target.compareTo(arr.get(i).getValue()) <= 0) {
 
                 return i;
             }
@@ -123,6 +131,12 @@ public class BTree<T extends Comparable<T>> {
         if (node == null)
             return;
 
+        BNode<T>.Key target = lookUp(key);
+        if(target != null){
+            target.decrCounter();
+            return;
+        }
+
         if (node.getKeys().contains(key)) {
             if (node.isLeaf()) {
                 node.getKeys().remove(key);
@@ -137,7 +151,7 @@ public class BTree<T extends Comparable<T>> {
             if(node.isLeaf()) return;
             boolean found = false;
             for (int i = 0; i < node.getKeys().size(); i++) {
-                if (key.compareTo(node.getKeys().get(i)) < 0) {
+                if (key.compareTo(node.getKeys().get(i).getValue()) < 0) {
                     found = true;
                     remove(node.getChildren().get(i), key);
                     break;
@@ -176,11 +190,11 @@ public class BTree<T extends Comparable<T>> {
         BNode<T> newNode = new BNode<>(order);
 
         for (int i = 0; i < left.getKeys().size(); i++) {
-            newNode.addKeyOrdered(left.getKeys().get(i));
+            newNode.addKeyOrdered(left.getKeys().get(i).getValue());
         }
         newNode.addKeyOrdered(keyBetween);
         for (int i = 0; i < node.getKeys().size(); i++) {
-            newNode.addKeyOrdered(node.getKeys().get(i));
+            newNode.addKeyOrdered(node.getKeys().get(i).getValue());
         }
         for (int i = 0; i < left.getChildren().size(); i++) {
             newNode.addChildOrdered(left.getChildren().get(i));
@@ -206,11 +220,11 @@ public class BTree<T extends Comparable<T>> {
         BNode<T> newNode = new BNode<>(order);
 
         for (int i = 0; i < node.getKeys().size(); i++) {
-            newNode.addKeyOrdered(node.getKeys().get(i));
+            newNode.addKeyOrdered(node.getKeys().get(i).getValue());
         }
         newNode.addKeyOrdered(keyBetween);
         for (int i = 0; i < right.getKeys().size(); i++) {
-            newNode.addKeyOrdered(right.getKeys().get(i));
+            newNode.addKeyOrdered(right.getKeys().get(i).getValue());
         }
         for (int i = 0; i < node.getChildren().size(); i++) {
             newNode.addChildOrdered(node.getChildren().get(i));
@@ -233,7 +247,7 @@ public class BTree<T extends Comparable<T>> {
         BNode<T> left = node.leftSibling();
         T maxP, maxSib;
         int sibsize = left.getKeys().size();
-        maxSib = left.getKeys().get(sibsize - 1);
+        maxSib = left.getKeys().get(sibsize - 1).getValue();
         maxP = node.getIncludedKeyleftSibling();
         int keyIndex = left.getKeys().indexOf(maxSib);
         if (!left.isLeaf()) {
@@ -252,7 +266,7 @@ public class BTree<T extends Comparable<T>> {
         BNode<T> parent = node.getParent();
         BNode<T> right = node.rightSibling();
         T minP, minSib;
-        minSib = right.getKeys().get(0);
+        minSib = right.getKeys().get(0).getValue();
         minP = node.getIncludedKeyRightSibling();
         int keyIndex = right.getKeys().indexOf(minSib);
         if (!right.isLeaf()) {
@@ -268,7 +282,7 @@ public class BTree<T extends Comparable<T>> {
     }
 
     private T getInorderPred(BNode<T> node) {
-        if (node.isLeaf()) return node.getKeys().get(node.getKeys().size() - 1);
+        if (node.isLeaf()) return node.getKeys().get(node.getKeys().size() - 1).getValue();
         else return getInorderPred(node.getChildren().get(node.getChildren().size() - 1));
     }
 
@@ -300,21 +314,41 @@ public class BTree<T extends Comparable<T>> {
         return count;
     }
 
-    public int search(String word){
-        return search(root, word);
-    }
+//    public int search(String word){
+//        return search(root, word);
+//    }
 
-    private int search(BNode<T> root, String word){
-        if (root != null) {
-            for(T key: root.getKeys()){
-                if(key.equals(word))
-                    return root.keyCount;
+//    private int search(BNode<T> root, String word){
+//        if (root != null) {
+//            for(T key: root.getKeys()){
+//                if(key.equals(word))
+//                    return root.keyCount;
+//            }
+//            for (BNode<T> node : root.getChildren()) {
+//                search(node, word);
+//            }
+//        }
+//        return 0;
+//    }
+    public BNode<T>.Key lookUp(T value){
+        return lookUp(this.root, value);
+    }
+    private BNode<T>.Key lookUp(BNode<T> root,T value){
+        BNode<T>.Key target = null;
+        if(root != null){
+            for (BNode<T>.Key key: root.getKeys() ) {
+                if(key.getValue().compareTo(value) == 0){
+                    return key;
+                }
             }
             for (BNode<T> node : root.getChildren()) {
-                search(node, word);
+                target = lookUp(node, value);
+                if(target != null){
+                    return target;
+                }
             }
         }
-        return 0;
+        return null;
     }
 
 

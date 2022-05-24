@@ -3,10 +3,35 @@ import java.util.List;
 
 
 public class BNode<T extends Comparable<T>> {
+    class Key{
+        private final T value;
+        private  int counter;
+        public Key(T value){
+            this.value = value;
+            this.counter = 0;
+        }
+
+        public T getValue() {
+            return value;
+        }
+
+        public void incrCounter(){
+            this.counter++;
+        }
+
+        public void decrCounter(){
+            this.counter--;
+        }
+
+        @Override
+        public String toString() {
+            return this.value.toString();
+        }
+    }
 
     private final int order;
-    private List<T> keys;
-    private List<BNode<T>> children;
+    private final List<Key> keys;
+    private final List<BNode<T>> children;
     private BNode<T> parent;
     private final int minimumKeys;
 
@@ -61,16 +86,16 @@ public class BNode<T extends Comparable<T>> {
 
     public T getIncludedKeyleftSibling() {
         int leftIndex = this.leftSibling().childIndex();
-        return this.getParent().getKeys().get(leftIndex);
+        return this.getParent().getKeys().get(leftIndex).getValue();
     }
 
     public T getIncludedKeyRightSibling() {
-        return this.getParent().getKeys().get(this.childIndex());
+        return this.getParent().getKeys().get(this.childIndex()).getValue();
     }
 
     public void addChildOrdered(BNode<T> child) {
         for (int i = 0; i < this.children.size(); i++) {
-            if (this.children.get(i).getKeys().get(0).compareTo(child.getKeys().get(0)) > 0) {
+            if (this.children.get(i).getKeys().get(0).getValue().compareTo(child.getKeys().get(0).getValue()) > 0) {
                 this.children.add(i, child);
                 return;
             }
@@ -82,17 +107,17 @@ public class BNode<T extends Comparable<T>> {
         return children;
     }
 
-    public void addKeyOrdered(T key) {
+    public void addKeyOrdered(T keyValue) {
         for (int i = 0; i < this.keys.size(); i++) {
-            if (this.keys.get(i).compareTo(key) > 0) {
-                this.keys.add(i, key);
+            if (this.keys.get(i).getValue().compareTo(keyValue) > 0) {
+                this.keys.add(i, new Key(keyValue));
                 return;
             }
         }
-        this.keys.add(key);
+        this.keys.add(new Key(keyValue));
     }
 
-    public List<T> getKeys() {
+    public List<Key> getKeys() {
         return keys;
     }
 

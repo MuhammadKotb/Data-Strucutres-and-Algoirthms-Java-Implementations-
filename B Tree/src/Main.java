@@ -12,7 +12,7 @@ public class Main
         bTree.insert(80);
         bTree.insert(80);
         bTree.insert(80);
-        //bTree.insert(80);
+        bTree.insert(80);
         //bTree.insertAll(13, 192, 123, 53, 439, 879, 55, 19, 369, 218, 445, 974, 312, 563, 818, 1000, 1050, 1473, 1, 2);
 
       /*  bTree.delete(9);

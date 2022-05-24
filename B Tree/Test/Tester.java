@@ -1,4 +1,4 @@
-/*import org.junit.Test;
+import org.junit.Test;
 
 public class Tester {
     @Test
@@ -30,4 +30,4 @@ public class Tester {
         bTree.delete(13);
         bTree.traverseTree();
     }
-}*/
+}
