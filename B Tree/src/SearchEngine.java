@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,9 @@ public class SearchEngine {
                 String passage = n.getTextContent();
                 String[] words = passage.split("\\s+");
                 BTree btree = new BTree(5);
-                btree.insertAll(words);
+                for(String word: words){
+                    btree.insert(word.toLowerCase());
+                }
                 Object[] arr = new Object[2];
                 arr[0] = id;
                 arr[1] = btree;
@@ -120,7 +123,6 @@ public class SearchEngine {
     public List<SearchResult> searchByWordWithRanking(String word){
         List<SearchResult> srArr = new ArrayList<>();
         for(var elem: btreesArr){
-            //System.out.println("Inside search");
             BTree btree = (BTree) elem[1];
             String id = (String) elem[0];
             try {
@@ -135,51 +137,79 @@ public class SearchEngine {
     }
 
 
-    private ISearchResult isPresent(List<ISearchResult> srArr, String id){
+    private ISearchResult isPresent(List<SearchResult> srArr, String id){
         for(ISearchResult elem: srArr){
             if(elem.getId() == id)
                 return elem;
         }
         return null;
     }
-    public List<ISearchResult> searchByMultipleWordWithRanking(String sentence){
-        List<ISearchResult> srArr = new ArrayList<>();
+    public List<SearchResult> searchByMultipleWordWithRanking(String sentence){
+        List<SearchResult> srArr = new ArrayList<>();
         List<Object[]> btreesArr2 = this.btreesArr;
         String[] words = sentence.split("\\s+");
-        for(int i=1; i< words.length; i++){
+
+        for(int i=0; i< words.length; i++){
             String word = words[i];
+            List<Object[]> tobeRemoved = new ArrayList<>();
             for(var elem: btreesArr2){
                 String id = (String) elem[0];
                 BTree btree = (BTree) elem[1];
                 BNode<String>.Key key = btree.lookUp(words[i]);
                 if(key == null)
-                    btreesArr2.remove(elem);
-                else{
-                    var searchResult = (SearchResult) isPresent(srArr, id);
-                    if(searchResult == null)
-                        srArr.add(new SearchResult(id, key.getCounter()));
-                    else{
-                        searchResult.setRank(Math.min(searchResult.getRank(), key.getCounter()));
-                    }
-                }
+                    tobeRemoved.add(elem);
             }
+            for(Object[] elem: tobeRemoved)
+                btreesArr2.remove(elem);
+
+        }
+        for(var elem: btreesArr2){
+            String id = (String) elem[0];
+            int rank = 1000; //MAX_VALUE
+            for(String word: words){
+                var x = (BTree<String>)elem[1];
+                rank = Math.min(rank, x.lookUp(word).getCounter());
+
+            }
+            srArr.add(new SearchResult(id, rank));
         }
         return srArr;
     }
-    static class tmp{
-        public String name;
-        public int age;
 
-        public tmp(String name, int age) {
-            this.name = name;
-            this.age = age;
-        }
-    }
     public static void main(String args[]){
+        //Test 1
         SearchEngine se = new SearchEngine();
-        se.indexWebPage("Wikipedia Data Sample/wiki_00");
-        List<SearchResult> arr = se.searchByWordWithRanking("He");
+        try {
+            se.indexWebPage("Wikipedia Data Sample/wiki_01");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        List<SearchResult> arr = se.searchByWordWithRanking("Source".toLowerCase());
         for(var elem: arr){
+            System.out.println("id: "+elem.getId() +" rank: "+elem.getRank());
+        }
+
+        //Test2
+        SearchEngine se2 = new SearchEngine();
+        try {
+            se2.indexWebPage("Wikipedia Data Sample/wiki_02");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        List<SearchResult> arr2 = se2.searchByMultipleWordWithRanking("howson guests frequent".toLowerCase());
+        for(var elem: arr2){
+            System.out.println("id: "+elem.getId() +" rank: "+elem.getRank());
+        }
+
+        //Test 3
+        SearchEngine se3 = new SearchEngine();
+        try {
+            se3.indexDirectory("Wikipedia Data Sample");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        List<SearchResult> arr3 = se3.searchByMultipleWordWithRanking("howson guests frequent".toLowerCase());
+        for(var elem: arr3){
             System.out.println("id: "+elem.getId() +" rank: "+elem.getRank());
         }
     }
