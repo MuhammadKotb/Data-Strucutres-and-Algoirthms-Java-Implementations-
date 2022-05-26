@@ -5,10 +5,15 @@ import java.util.List;
 public class BNode<T extends Comparable<T>> {
     class Key{
         private final T value;
+
         private  int counter;
+
         public Key(T value){
             this.value = value;
             this.counter = 0;
+        }
+        public int getCounter() {
+            return counter;
         }
 
         public T getValue() {
