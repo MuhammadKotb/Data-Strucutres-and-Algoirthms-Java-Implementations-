@@ -10,7 +10,7 @@ public class BNode<T extends Comparable<T>> {
 
         public Key(T value){
             this.value = value;
-            this.counter = 0;
+            this.counter = 1;
         }
         public int getCounter() {
             return counter;
@@ -30,7 +30,7 @@ public class BNode<T extends Comparable<T>> {
 
         @Override
         public String toString() {
-            return this.value.toString();
+            return " Value: ," + this.value.toString() + " Count: " + this.counter;
         }
     }
 

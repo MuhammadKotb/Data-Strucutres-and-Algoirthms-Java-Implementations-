@@ -11,6 +11,11 @@ public class Main
         bTree.insertAll(5, 3, 21, 9, 1, 13, 2, 7, 10, 12, 4);
         bTree.insert(80);
         bTree.insert(80);
+        bTree.insert(9);
+        bTree.insert(9);
+        bTree.insert(1);
+        bTree.insert(1);
+        bTree.insert(80);
         bTree.insert(80);
         bTree.insert(80);
         //bTree.insertAll(13, 192, 123, 53, 439, 879, 55, 19, 369, 218, 445, 974, 312, 563, 818, 1000, 1050, 1473, 1, 2);

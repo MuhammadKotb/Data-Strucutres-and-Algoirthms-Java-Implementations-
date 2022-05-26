@@ -12,20 +12,20 @@ public class BTree<T extends Comparable<T>> {
     @SafeVarargs
     public final void insertAll(T... key) {
         for (T k : key) {
-            insert(k, this.root);
+            insert(k);
         }
     }
 
     public void insert(T key) {
-        insert(key, this.root);
-    }
-
-    private void insert(T key, BNode<T> node) {
         BNode<T>.Key target = lookUp(key);
         if(target != null){
             target.incrCounter();
             return;
         }
+        insert(key, this.root);
+    }
+
+    private void insert(T key, BNode<T> node) {
 
         if (node.isLeaf() ) {
             if (node.getKeys().size() == order - 1) {
@@ -124,6 +124,11 @@ public class BTree<T extends Comparable<T>> {
     }
 
     public void delete(T key) {
+        BNode<T>.Key target = lookUp(key);
+        if(target != null && target.getCounter() > 1){
+            target.decrCounter();
+            return;
+        }
         remove(this.root, key);
     }
 
@@ -131,11 +136,7 @@ public class BTree<T extends Comparable<T>> {
         if (node == null)
             return;
 
-        BNode<T>.Key target = lookUp(key);
-        if(target != null){
-            target.decrCounter();
-            return;
-        }
+
 
         if (node.getKeys().contains(key)) {
             if (node.isLeaf()) {
