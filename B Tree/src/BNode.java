@@ -3,6 +3,29 @@ import java.util.List;
 
 
 public class BNode<T extends Comparable<T>> {
+//    class KeysList extends List{
+//
+//
+//        @Override
+//        public int size() {
+//            return 0;
+//        }
+//
+//        @Override
+//        public boolean contains(Object o) {
+//            return false;
+//        }
+//
+//        @Override
+//        public boolean remove(Object o) {
+//            return false;
+//        }
+//
+//        @Override
+//        public Object remove(int index) {
+//            return null;
+//        }
+//    }
     class Key{
         private final T value;
 
@@ -32,6 +55,7 @@ public class BNode<T extends Comparable<T>> {
         public String toString() {
             return " Value: ," + this.value.toString() + " Count: " + this.counter;
         }
+
     }
 
     private final int order;
@@ -89,13 +113,13 @@ public class BNode<T extends Comparable<T>> {
         return (this.getKeys().size() - 1) < this.getMinimumKeys();
     }
 
-    public T getIncludedKeyleftSibling() {
+    public Key getIncludedKeyleftSibling() {
         int leftIndex = this.leftSibling().childIndex();
-        return this.getParent().getKeys().get(leftIndex).getValue();
+        return this.getParent().getKeys().get(leftIndex);
     }
 
-    public T getIncludedKeyRightSibling() {
-        return this.getParent().getKeys().get(this.childIndex()).getValue();
+    public Key getIncludedKeyRightSibling() {
+        return this.getParent().getKeys().get(this.childIndex());
     }
 
     public void addChildOrdered(BNode<T> child) {
@@ -120,6 +144,16 @@ public class BNode<T extends Comparable<T>> {
             }
         }
         this.keys.add(new Key(keyValue));
+    }
+
+    public void addKeyOrdered(Key key) {
+        for (int i = 0; i < this.keys.size(); i++) {
+            if (this.keys.get(i).getValue().compareTo(key.getValue()) > 0) {
+                this.keys.add(i, key);
+                return;
+            }
+        }
+        this.keys.add(key);
     }
 
     public List<Key> getKeys() {
