@@ -1,4 +1,4 @@
-package com.kotb;
+
 
 public interface ISearchResult {
 

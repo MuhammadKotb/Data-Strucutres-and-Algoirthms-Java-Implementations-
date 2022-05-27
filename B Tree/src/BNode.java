@@ -1,22 +1,14 @@
-package com.kotb;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.xml.validation.ValidatorHandler;
-
 
 public class BNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
 
 
     public class Key  {
-        private final V value;
+        private  V value;
         private K key;
-
         private  int counter;
 
-        
         public Key(K key, V value){
             this.key = key;
             this.value = value;
@@ -25,6 +17,7 @@ public class BNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
         public K getKeyValue(){
             return this.key;
         }
+
         public int getCounter() {
             return counter;
         }
@@ -32,6 +25,8 @@ public class BNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
         public V getValue() {
             return value;
         }
+
+        public void setValue(V value) { this.value = value; }
 
         public void incrCounter(){
             this.counter++;
@@ -45,6 +40,7 @@ public class BNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
         public String toString() {
             return " Key: " + this.getKeyValue().toString() + ", Value :  "  + this.getValue() + ", Count: " + this.counter;
         }
+
         @Override
         public boolean equals(Object key){
             if(key == null) return false;
@@ -52,8 +48,8 @@ public class BNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
             Key keyTemp = (Key)key;;
             K keyValue = keyTemp.getKeyValue();
             return this.key.equals(keyValue);
-            
         }
+
         @Override
         public int hashCode(){
             return this.value.hashCode();
@@ -64,9 +60,11 @@ public class BNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
     private int order;
     private List<Key> keys;
     private List<BNode<K, V>> children;
+    private List<IBTreeNode<K, V>> childrenNodes;
     private BNode<K, V> parent;
     private final int minimumKeys;
     private boolean isLeaf;
+    private int MaxNumOfKeys;
 
     public BNode(int order, BNode<K, V> parent) {
         this.order = order;
@@ -160,11 +158,13 @@ public class BNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
         this.keys.add(key);
     }
     public List<K> getKeyValues(){
-        return this.keys.stream().map(k -> k.getKeyValue()).toList();
+        return this.keys.stream().map(Key::getKeyValue).toList();
     }
+
     public int getKeyValueIndex(K key){
-        return this.keys.stream().map(k -> k.getKeyValue()).toList().indexOf(key);
+        return this.keys.stream().map(Key::getKeyValue).toList().indexOf(key);
     }
+
     public void removeKeyFromNode(K key){
         for(BNode<K, V>.Key k : this.getListOfKeys()){
             if(key.equals(k.getKeyValue())){ this.getListOfKeys().remove(k); break;};
@@ -195,17 +195,14 @@ public class BNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
 
     @Override
     public int getNumOfKeys() {
-        return this.keys.size();
+        return this.MaxNumOfKeys;
     }
 
     @Override
-    public void setNumOfKeys() {
-        
-        
-    }
+    public void setNumOfKeys() { this.MaxNumOfKeys = order-1; }
 
     @Override
-    public void setLeaft(boolean isLeaf) {
+    public void setLeaf(boolean isLeaf) {
         this.isLeaf = isLeaf;
     }
 
@@ -224,25 +221,24 @@ public class BNode<K extends Comparable<K>, V> implements IBTreeNode<K, V> {
 
     @Override
     public List<V> getValues() {
-        return this.keys.stream().map(k -> k.getValue()).toList();
+        return this.keys.stream().map(Key::getValue).toList();
     }
 
     @Override
     public void setValues(List<V> values) {
-        for(V v : values){
-
+        for(int i = 0;i < values.size();i++){
+            this.keys.get(i).setValue(values.get(i));
         }        
     }
 
     @Override
     public List<IBTreeNode<K, V>> getChildren() {
 
-        return null;
+        return this.childrenNodes;
     }
 
     @Override
     public void setChildren(List<IBTreeNode<K, V>> children) {
-        
-        
+        this.childrenNodes = children;
     }
 }

@@ -1,4 +1,3 @@
-package com.kotb;
 
 public interface IBTree <K extends Comparable<K>, V> {
 

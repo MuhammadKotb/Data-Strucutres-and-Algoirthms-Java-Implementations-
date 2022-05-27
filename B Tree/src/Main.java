@@ -1,4 +1,4 @@
-package com.kotb;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,8 +8,6 @@ public class Main
     public static void main( String[] args )
     {
         IBTree<Integer, Object> btree = new BTree<>(4);
-
-       // bTree.insertAll(5, 3, 21, 9, 1, 13, 2, 7, 10, 12, 4);
 
         btree.insert(5, "LOL");
         btree.insert(2, "LOl2");
