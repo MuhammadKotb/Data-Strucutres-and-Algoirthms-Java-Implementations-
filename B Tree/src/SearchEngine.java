@@ -1,5 +1,3 @@
-
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -19,7 +17,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
-public class SearchEngine {
+public class SearchEngine implements ISearchEngine {
     List<Object[]> btreesArr;
 
     public SearchEngine() {
@@ -73,7 +71,7 @@ public class SearchEngine {
             System.out.println(arr[index].getName());
         }
 
-            // for sub-directories
+        // for sub-directories
         else if (arr[index].isDirectory()) {
             System.out.println("[" + arr[index].getName()
                     + "]");
@@ -95,10 +93,10 @@ public class SearchEngine {
         for(var file: allFiles){
             indexWebPage(file.getPath());
         }
-        
+
     }
 
-   public void deleteWebPage(String filePath){
+    public void deleteWebPage(String filePath){
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -122,8 +120,8 @@ public class SearchEngine {
         }
     }
 
-    public List<SearchResult> searchByWordWithRanking(String word){
-        List<SearchResult> srArr = new ArrayList<>();
+    public List<ISearchResult> searchByWordWithRanking(String word){
+        List<ISearchResult> srArr = new ArrayList<>();
         for(var elem: btreesArr){
             BTree<String, String> btree = (BTree) elem[1];
             String id = (String) elem[0];
@@ -147,9 +145,9 @@ public class SearchEngine {
         return null;
     }
 
-    
-    public List<SearchResult> searchByMultipleWordWithRanking(String sentence){
-        List<SearchResult> srArr = new ArrayList<>();
+
+    public List<ISearchResult> searchByMultipleWordWithRanking(String sentence){
+        List<ISearchResult> srArr = new ArrayList<>();
         List<Object[]> btreesArr2 = this.btreesArr;
         String[] words = sentence.split("\\s+");
 
@@ -188,7 +186,7 @@ public class SearchEngine {
         }catch(Exception e){
             e.printStackTrace();
         }
-        List<SearchResult> arr = se.searchByWordWithRanking("Source".toLowerCase());
+        List<ISearchResult> arr = se.searchByWordWithRanking("Source".toLowerCase());
         for(var elem: arr){
             System.out.println("id: "+elem.getId() +" rank: "+elem.getRank());
         }
@@ -200,7 +198,7 @@ public class SearchEngine {
         }catch(Exception e){
             e.printStackTrace();
         }
-        List<SearchResult> arr2 = se2.searchByMultipleWordWithRanking("howson guests frequent".toLowerCase());
+        List<ISearchResult> arr2 = se2.searchByMultipleWordWithRanking("howson guests frequent".toLowerCase());
         for(var elem: arr2){
             System.out.println("id: "+elem.getId() +" rank: "+elem.getRank());
         }
@@ -212,7 +210,7 @@ public class SearchEngine {
         }catch(Exception e){
             e.printStackTrace();
         }
-        List<SearchResult> arr3 = se3.searchByMultipleWordWithRanking("howson guests frequent".toLowerCase());
+        List<ISearchResult> arr3 = se3.searchByMultipleWordWithRanking("howson guests frequent".toLowerCase());
         for(var elem: arr3){
             System.out.println("id: "+elem.getId() +" rank: "+elem.getRank());
         }
