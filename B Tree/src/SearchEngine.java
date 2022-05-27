@@ -1,3 +1,4 @@
+package com.kotb;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -37,9 +38,9 @@ public class SearchEngine {
                 String id =  n1.getAttribute("id");
                 String passage = n.getTextContent();
                 String[] words = passage.split("\\s+");
-                BTree btree = new BTree(5);
+                BTree<String, String> btree = new BTree<String, String>(5);
                 for(String word: words){
-                    btree.insert(word.toLowerCase());
+                    btree.insert(word.toLowerCase(), word.toLowerCase());
                 }
                 Object[] arr = new Object[2];
                 arr[0] = id;
@@ -94,6 +95,7 @@ public class SearchEngine {
         for(var file: allFiles){
             indexWebPage(file.getPath());
         }
+        
     }
 
    public void deleteWebPage(String filePath){
@@ -123,10 +125,10 @@ public class SearchEngine {
     public List<SearchResult> searchByWordWithRanking(String word){
         List<SearchResult> srArr = new ArrayList<>();
         for(var elem: btreesArr){
-            BTree btree = (BTree) elem[1];
+            BTree<String, String> btree = (BTree) elem[1];
             String id = (String) elem[0];
             try {
-                BNode<String>.Key key = btree.lookUp(word);
+                BNode<String, String>.Key key = btree.lookUp(word);
                 if(key != null && key.getCounter() > 0)
                     srArr.add(new SearchResult(id, key.getCounter()));
             }catch(Exception e){
@@ -144,6 +146,8 @@ public class SearchEngine {
         }
         return null;
     }
+
+    
     public List<SearchResult> searchByMultipleWordWithRanking(String sentence){
         List<SearchResult> srArr = new ArrayList<>();
         List<Object[]> btreesArr2 = this.btreesArr;
@@ -154,8 +158,8 @@ public class SearchEngine {
             List<Object[]> tobeRemoved = new ArrayList<>();
             for(var elem: btreesArr2){
                 String id = (String) elem[0];
-                BTree btree = (BTree) elem[1];
-                BNode<String>.Key key = btree.lookUp(words[i]);
+                BTree<String, String> btree = (BTree) elem[1];
+                BNode<String, String>.Key key = btree.lookUp(words[i]);
                 if(key == null)
                     tobeRemoved.add(elem);
             }
@@ -167,7 +171,7 @@ public class SearchEngine {
             String id = (String) elem[0];
             int rank = 1000; //MAX_VALUE
             for(String word: words){
-                var x = (BTree<String>)elem[1];
+                var x = (BTree<String, String>)elem[1];
                 rank = Math.min(rank, x.lookUp(word).getCounter());
 
             }
